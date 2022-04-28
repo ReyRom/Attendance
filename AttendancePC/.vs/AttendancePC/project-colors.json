@@ -1,0 +1,26 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "2a4eda88-6cbe-4911-a996-4e4c5f32104f": {
+      "ProjectGuid": "2a4eda88-6cbe-4911-a996-4e4c5f32104f",
+      "DisplayName": "AttendancePC",
+      "ColorIndex": 0
+    },
+    "4c2136a1-7d13-4516-976b-55786a5b77cb": {
+      "ProjectGuid": "4c2136a1-7d13-4516-976b-55786a5b77cb",
+      "DisplayName": "AttendancePC_FWTests",
+      "ColorIndex": 1
+    },
+    "b1f53c85-4b0f-4090-b34a-96e6c08a90af": {
+      "ProjectGuid": "b1f53c85-4b0f-4090-b34a-96e6c08a90af",
+      "DisplayName": "AttendancePCTests",
+      "ColorIndex": 2
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Прочие файлы",
+      "ColorIndex": -1
+    }
+  },
+  "NextColorIndex": 3
+}

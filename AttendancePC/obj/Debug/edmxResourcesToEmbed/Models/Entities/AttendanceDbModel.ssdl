@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище AttendanceDbModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Days">
+    <Key>
+      <PropertyRef Name="IdDay" />
+    </Key>
+    <Property Name="IdDay" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="FirstPair" Type="tinyint" Nullable="false" />
+    <Property Name="LastPair" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Guests">
+    <Key>
+      <PropertyRef Name="IdUser" />
+    </Key>
+    <Property Name="IdUser" Type="int" Nullable="false" />
+    <Property Name="IsPrime" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LessonAttends">
+    <Key>
+      <PropertyRef Name="IdLesson" />
+      <PropertyRef Name="IdStudent" />
+    </Key>
+    <Property Name="IdLesson" Type="int" Nullable="false" />
+    <Property Name="IdStudent" Type="int" Nullable="false" />
+    <Property Name="AttendChar" Type="nchar" MaxLength="1" Nullable="false" />
+    <Property Name="IsReasonable" Type="bit" />
+    <Property Name="Comment" Type="nvarchar" MaxLength="300" />
+  </EntityType>
+  <EntityType Name="Lessons">
+    <Key>
+      <PropertyRef Name="IdLesson" />
+    </Key>
+    <Property Name="IdLesson" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdDay" Type="int" Nullable="false" />
+    <Property Name="IdSubject" Type="int" Nullable="false" />
+    <Property Name="OrderNumber" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Redactors">
+    <Key>
+      <PropertyRef Name="IdUser" />
+    </Key>
+    <Property Name="IdUser" Type="int" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Schedules">
+    <Key>
+      <PropertyRef Name="DayOfWeek" />
+      <PropertyRef Name="OrderNumber" />
+      <PropertyRef Name="IsEven" />
+    </Key>
+    <Property Name="IdSubject" Type="int" Nullable="false" />
+    <Property Name="DayOfWeek" Type="tinyint" Nullable="false" />
+    <Property Name="OrderNumber" Type="tinyint" Nullable="false" />
+    <Property Name="IsEven" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Students">
+    <Key>
+      <PropertyRef Name="IdStudent" />
+    </Key>
+    <Property Name="IdStudent" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="IsDismissed" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Subjects">
+    <Key>
+      <PropertyRef Name="IdSubject" />
+    </Key>
+    <Property Name="IdSubject" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="IsActual" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="IdUser" />
+    </Key>
+    <Property Name="IdUser" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Attendance.dbo.AttendanceSumView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="AttendanceSumView">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Missing" Type="int" />
+    <Property Name="Reasonable" Type="int" />
+    <Property Name="UnReasonable" Type="int" />
+  </EntityType>
+  <Association Name="FK_Guests_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="Guests" Type="Self.Guests" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="IdUser" />
+      </Principal>
+      <Dependent Role="Guests">
+        <PropertyRef Name="IdUser" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LessonAttends_Lessons">
+    <End Role="Lessons" Type="Self.Lessons" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="LessonAttends" Type="Self.LessonAttends" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lessons">
+        <PropertyRef Name="IdLesson" />
+      </Principal>
+      <Dependent Role="LessonAttends">
+        <PropertyRef Name="IdLesson" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LessonAttends_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="1" />
+    <End Role="LessonAttends" Type="Self.LessonAttends" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="IdStudent" />
+      </Principal>
+      <Dependent Role="LessonAttends">
+        <PropertyRef Name="IdStudent" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Lessons_Days">
+    <End Role="Days" Type="Self.Days" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Lessons" Type="Self.Lessons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Days">
+        <PropertyRef Name="IdDay" />
+      </Principal>
+      <Dependent Role="Lessons">
+        <PropertyRef Name="IdDay" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Lessons_Subjects">
+    <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
+    <End Role="Lessons" Type="Self.Lessons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subjects">
+        <PropertyRef Name="IdSubject" />
+      </Principal>
+      <Dependent Role="Lessons">
+        <PropertyRef Name="IdSubject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Redactors_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="Redactors" Type="Self.Redactors" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="IdUser" />
+      </Principal>
+      <Dependent Role="Redactors">
+        <PropertyRef Name="IdUser" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Schedules_Subjects">
+    <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
+    <End Role="Schedules" Type="Self.Schedules" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subjects">
+        <PropertyRef Name="IdSubject" />
+      </Principal>
+      <Dependent Role="Schedules">
+        <PropertyRef Name="IdSubject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="AddGuest" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="login" Type="nvarchar" Mode="In" />
+    <Parameter Name="isPrime" Type="bit" Mode="In" />
+  </Function>
+  <Function Name="AddRedactor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="login" Type="nvarchar" Mode="In" />
+    <Parameter Name="password" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="SP_Dynamic_Pivot" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="TableSRC" Type="nvarchar" Mode="In" />
+    <Parameter Name="ColumnName" Type="nvarchar" Mode="In" />
+    <Parameter Name="Field" Type="nvarchar" Mode="In" />
+    <Parameter Name="FieldRows" Type="nvarchar" Mode="In" />
+    <Parameter Name="FunctionType" Type="nvarchar" Mode="In" />
+    <Parameter Name="Condition" Type="nvarchar" Mode="In" />
+    <Parameter Name="OutputTable" Type="nvarchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="Хранилище AttendanceDbModelContainer">
+    <EntitySet Name="Days" EntityType="Self.Days" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Guests" EntityType="Self.Guests" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LessonAttends" EntityType="Self.LessonAttends" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Lessons" EntityType="Self.Lessons" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Redactors" EntityType="Self.Redactors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Schedules" EntityType="Self.Schedules" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Subjects" EntityType="Self.Subjects" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AttendanceSumView" EntityType="Self.AttendanceSumView" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [AttendanceSumView].[Name] AS [Name], 
+    [AttendanceSumView].[Missing] AS [Missing], 
+    [AttendanceSumView].[Reasonable] AS [Reasonable], 
+    [AttendanceSumView].[UnReasonable] AS [UnReasonable]
+    FROM [dbo].[AttendanceSumView] AS [AttendanceSumView]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_Guests_Users" Association="Self.FK_Guests_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Guests" EntitySet="Guests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LessonAttends_Lessons" Association="Self.FK_LessonAttends_Lessons">
+      <End Role="Lessons" EntitySet="Lessons" />
+      <End Role="LessonAttends" EntitySet="LessonAttends" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LessonAttends_Students" Association="Self.FK_LessonAttends_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="LessonAttends" EntitySet="LessonAttends" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Lessons_Days" Association="Self.FK_Lessons_Days">
+      <End Role="Days" EntitySet="Days" />
+      <End Role="Lessons" EntitySet="Lessons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Lessons_Subjects" Association="Self.FK_Lessons_Subjects">
+      <End Role="Subjects" EntitySet="Subjects" />
+      <End Role="Lessons" EntitySet="Lessons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Redactors_Users" Association="Self.FK_Redactors_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Redactors" EntitySet="Redactors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Schedules_Subjects" Association="Self.FK_Schedules_Subjects">
+      <End Role="Subjects" EntitySet="Subjects" />
+      <End Role="Schedules" EntitySet="Schedules" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

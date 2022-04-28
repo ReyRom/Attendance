@@ -1,0 +1,658 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище AttendanceDbModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Days">
+          <Key>
+            <PropertyRef Name="IdDay" />
+          </Key>
+          <Property Name="IdDay" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="FirstPair" Type="tinyint" Nullable="false" />
+          <Property Name="LastPair" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Guests">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="int" Nullable="false" />
+          <Property Name="IsPrime" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LessonAttends">
+          <Key>
+            <PropertyRef Name="IdLesson" />
+            <PropertyRef Name="IdStudent" />
+          </Key>
+          <Property Name="IdLesson" Type="int" Nullable="false" />
+          <Property Name="IdStudent" Type="int" Nullable="false" />
+          <Property Name="AttendChar" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="IsReasonable" Type="bit" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="Lessons">
+          <Key>
+            <PropertyRef Name="IdLesson" />
+          </Key>
+          <Property Name="IdLesson" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdDay" Type="int" Nullable="false" />
+          <Property Name="IdSubject" Type="int" Nullable="false" />
+          <Property Name="OrderNumber" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Redactors">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="int" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Schedules">
+          <Key>
+            <PropertyRef Name="DayOfWeek" />
+            <PropertyRef Name="OrderNumber" />
+            <PropertyRef Name="IsEven" />
+          </Key>
+          <Property Name="IdSubject" Type="int" Nullable="false" />
+          <Property Name="DayOfWeek" Type="tinyint" Nullable="false" />
+          <Property Name="OrderNumber" Type="tinyint" Nullable="false" />
+          <Property Name="IsEven" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Students">
+          <Key>
+            <PropertyRef Name="IdStudent" />
+          </Key>
+          <Property Name="IdStudent" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDismissed" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Subjects">
+          <Key>
+            <PropertyRef Name="IdSubject" />
+          </Key>
+          <Property Name="IdSubject" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsActual" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Attendance.dbo.AttendanceSumView" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="AttendanceSumView">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Missing" Type="int" />
+          <Property Name="Reasonable" Type="int" />
+          <Property Name="UnReasonable" Type="int" />
+        </EntityType>
+        <Association Name="FK_Guests_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Guests" Type="Self.Guests" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Guests">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LessonAttends_Lessons">
+          <End Role="Lessons" Type="Self.Lessons" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LessonAttends" Type="Self.LessonAttends" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lessons">
+              <PropertyRef Name="IdLesson" />
+            </Principal>
+            <Dependent Role="LessonAttends">
+              <PropertyRef Name="IdLesson" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LessonAttends_Students">
+          <End Role="Students" Type="Self.Students" Multiplicity="1" />
+          <End Role="LessonAttends" Type="Self.LessonAttends" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="IdStudent" />
+            </Principal>
+            <Dependent Role="LessonAttends">
+              <PropertyRef Name="IdStudent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Lessons_Days">
+          <End Role="Days" Type="Self.Days" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Lessons" Type="Self.Lessons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Days">
+              <PropertyRef Name="IdDay" />
+            </Principal>
+            <Dependent Role="Lessons">
+              <PropertyRef Name="IdDay" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Lessons_Subjects">
+          <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
+          <End Role="Lessons" Type="Self.Lessons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subjects">
+              <PropertyRef Name="IdSubject" />
+            </Principal>
+            <Dependent Role="Lessons">
+              <PropertyRef Name="IdSubject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Redactors_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Redactors" Type="Self.Redactors" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Redactors">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Schedules_Subjects">
+          <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
+          <End Role="Schedules" Type="Self.Schedules" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subjects">
+              <PropertyRef Name="IdSubject" />
+            </Principal>
+            <Dependent Role="Schedules">
+              <PropertyRef Name="IdSubject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="AddGuest" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="login" Type="nvarchar" Mode="In" />
+          <Parameter Name="isPrime" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="AddRedactor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="login" Type="nvarchar" Mode="In" />
+          <Parameter Name="password" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="SP_Dynamic_Pivot" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TableSRC" Type="nvarchar" Mode="In" />
+          <Parameter Name="ColumnName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Field" Type="nvarchar" Mode="In" />
+          <Parameter Name="FieldRows" Type="nvarchar" Mode="In" />
+          <Parameter Name="FunctionType" Type="nvarchar" Mode="In" />
+          <Parameter Name="Condition" Type="nvarchar" Mode="In" />
+          <Parameter Name="OutputTable" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="Хранилище AttendanceDbModelContainer">
+          <EntitySet Name="Days" EntityType="Self.Days" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Guests" EntityType="Self.Guests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LessonAttends" EntityType="Self.LessonAttends" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lessons" EntityType="Self.Lessons" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Redactors" EntityType="Self.Redactors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Schedules" EntityType="Self.Schedules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subjects" EntityType="Self.Subjects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AttendanceSumView" EntityType="Self.AttendanceSumView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [AttendanceSumView].[Name] AS [Name], 
+    [AttendanceSumView].[Missing] AS [Missing], 
+    [AttendanceSumView].[Reasonable] AS [Reasonable], 
+    [AttendanceSumView].[UnReasonable] AS [UnReasonable]
+    FROM [dbo].[AttendanceSumView] AS [AttendanceSumView]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Guests_Users" Association="Self.FK_Guests_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Guests" EntitySet="Guests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LessonAttends_Lessons" Association="Self.FK_LessonAttends_Lessons">
+            <End Role="Lessons" EntitySet="Lessons" />
+            <End Role="LessonAttends" EntitySet="LessonAttends" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LessonAttends_Students" Association="Self.FK_LessonAttends_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="LessonAttends" EntitySet="LessonAttends" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Lessons_Days" Association="Self.FK_Lessons_Days">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="Lessons" EntitySet="Lessons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Lessons_Subjects" Association="Self.FK_Lessons_Subjects">
+            <End Role="Subjects" EntitySet="Subjects" />
+            <End Role="Lessons" EntitySet="Lessons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Redactors_Users" Association="Self.FK_Redactors_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Redactors" EntitySet="Redactors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Schedules_Subjects" Association="Self.FK_Schedules_Subjects">
+            <End Role="Subjects" EntitySet="Subjects" />
+            <End Role="Schedules" EntitySet="Schedules" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AttendanceDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Day">
+          <Key>
+            <PropertyRef Name="IdDay" />
+          </Key>
+          <Property Name="IdDay" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FirstPair" Type="Byte" Nullable="false" />
+          <Property Name="LastPair" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Lessons" Relationship="Self.FK_Lessons_Days" FromRole="Days" ToRole="Lessons" />
+        </EntityType>
+        <EntityType Name="LessonAttend">
+          <Key>
+            <PropertyRef Name="IdLesson" />
+            <PropertyRef Name="IdStudent" />
+          </Key>
+          <Property Name="IdLesson" Type="Int32" Nullable="false" />
+          <Property Name="IdStudent" Type="Int32" Nullable="false" />
+          <Property Name="AttendChar" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="IsReasonable" Type="Boolean" />
+          <Property Name="Comment" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Lesson" Relationship="Self.FK_LessonAttends_Lessons" FromRole="LessonAttends" ToRole="Lessons" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_LessonAttends_Students" FromRole="LessonAttends" ToRole="Students" />
+        </EntityType>
+        <EntityType Name="Lesson">
+          <Key>
+            <PropertyRef Name="IdLesson" />
+          </Key>
+          <Property Name="IdLesson" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdDay" Type="Int32" Nullable="false" />
+          <Property Name="IdSubject" Type="Int32" Nullable="false" />
+          <Property Name="OrderNumber" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Day" Relationship="Self.FK_Lessons_Days" FromRole="Lessons" ToRole="Days" />
+          <NavigationProperty Name="LessonAttends" Relationship="Self.FK_LessonAttends_Lessons" FromRole="Lessons" ToRole="LessonAttends" />
+          <NavigationProperty Name="Subject" Relationship="Self.FK_Lessons_Subjects" FromRole="Lessons" ToRole="Subjects" />
+        </EntityType>
+        <EntityType Name="Schedule">
+          <Key>
+            <PropertyRef Name="DayOfWeek" />
+            <PropertyRef Name="OrderNumber" />
+            <PropertyRef Name="IsEven" />
+          </Key>
+          <Property Name="IdSubject" Type="Int32" Nullable="false" />
+          <Property Name="DayOfWeek" Type="Byte" Nullable="false" />
+          <Property Name="OrderNumber" Type="Byte" Nullable="false" />
+          <Property Name="IsEven" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Subject" Relationship="Self.FK_Schedules_Subjects" FromRole="Schedules" ToRole="Subjects" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="IdStudent" />
+          </Key>
+          <Property Name="IdStudent" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="LessonAttends" Relationship="Self.FK_LessonAttends_Students" FromRole="Students" ToRole="LessonAttends" />
+          <Property Name="IsDismissed" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Subject">
+          <Key>
+            <PropertyRef Name="IdSubject" />
+          </Key>
+          <Property Name="IdSubject" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Lessons" Relationship="Self.FK_Lessons_Subjects" FromRole="Subjects" ToRole="Lessons" />
+          <NavigationProperty Name="Schedules" Relationship="Self.FK_Schedules_Subjects" FromRole="Subjects" ToRole="Schedules" />
+          <Property Name="IsActual" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Guest" Relationship="AttendanceDbModel.FK_Guests_Users" FromRole="User" ToRole="Guest" />
+          <NavigationProperty Name="Redactor" Relationship="AttendanceDbModel.FK_Redactors_Users" FromRole="User" ToRole="Redactor" />
+          </EntityType>
+        <Association Name="FK_Lessons_Days">
+          <End Role="Days" Type="Self.Day" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Lessons" Type="Self.Lesson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Days">
+              <PropertyRef Name="IdDay" />
+            </Principal>
+            <Dependent Role="Lessons">
+              <PropertyRef Name="IdDay" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LessonAttends_Lessons">
+          <End Role="Lessons" Type="Self.Lesson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LessonAttends" Type="Self.LessonAttend" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lessons">
+              <PropertyRef Name="IdLesson" />
+            </Principal>
+            <Dependent Role="LessonAttends">
+              <PropertyRef Name="IdLesson" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LessonAttends_Students">
+          <End Role="Students" Type="Self.Student" Multiplicity="1" />
+          <End Role="LessonAttends" Type="Self.LessonAttend" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Students">
+              <PropertyRef Name="IdStudent" />
+            </Principal>
+            <Dependent Role="LessonAttends">
+              <PropertyRef Name="IdStudent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Lessons_Subjects">
+          <End Role="Subjects" Type="Self.Subject" Multiplicity="1" />
+          <End Role="Lessons" Type="Self.Lesson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subjects">
+              <PropertyRef Name="IdSubject" />
+            </Principal>
+            <Dependent Role="Lessons">
+              <PropertyRef Name="IdSubject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Schedules_Subjects">
+          <End Role="Subjects" Type="Self.Subject" Multiplicity="1" />
+          <End Role="Schedules" Type="Self.Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subjects">
+              <PropertyRef Name="IdSubject" />
+            </Principal>
+            <Dependent Role="Schedules">
+              <PropertyRef Name="IdSubject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AttendanceEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Days" EntityType="Self.Day" />
+          <EntitySet Name="LessonAttends" EntityType="Self.LessonAttend" />
+          <EntitySet Name="Lessons" EntityType="Self.Lesson" />
+          <EntitySet Name="Schedules" EntityType="Self.Schedule" />
+          <EntitySet Name="Students" EntityType="Self.Student" />
+          <EntitySet Name="Subjects" EntityType="Self.Subject" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Lessons_Days" Association="Self.FK_Lessons_Days">
+            <End Role="Days" EntitySet="Days" />
+            <End Role="Lessons" EntitySet="Lessons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LessonAttends_Lessons" Association="Self.FK_LessonAttends_Lessons">
+            <End Role="Lessons" EntitySet="Lessons" />
+            <End Role="LessonAttends" EntitySet="LessonAttends" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LessonAttends_Students" Association="Self.FK_LessonAttends_Students">
+            <End Role="Students" EntitySet="Students" />
+            <End Role="LessonAttends" EntitySet="LessonAttends" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Lessons_Subjects" Association="Self.FK_Lessons_Subjects">
+            <End Role="Subjects" EntitySet="Subjects" />
+            <End Role="Lessons" EntitySet="Lessons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Schedules_Subjects" Association="Self.FK_Schedules_Subjects">
+            <End Role="Subjects" EntitySet="Subjects" />
+            <End Role="Schedules" EntitySet="Schedules" />
+          </AssociationSet>
+          <FunctionImport Name="SP_Dynamic_Pivot">
+            <Parameter Name="TableSRC" Mode="In" Type="String" />
+            <Parameter Name="ColumnName" Mode="In" Type="String" />
+            <Parameter Name="Field" Mode="In" Type="String" />
+            <Parameter Name="FieldRows" Mode="In" Type="String" />
+            <Parameter Name="FunctionType" Mode="In" Type="String" />
+            <Parameter Name="Condition" Mode="In" Type="String" />
+            <Parameter Name="OutputTable" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="MissingsByMonth">
+          <Parameter Name="date" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="AddGuest">
+            <Parameter Name="login" Mode="In" Type="String" />
+            <Parameter Name="isPrime" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="AddRedactor">
+            <Parameter Name="login" Mode="In" Type="String" />
+            <Parameter Name="password" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Guests" EntityType="AttendanceDbModel.Guest" />
+          <EntitySet Name="Redactors" EntityType="AttendanceDbModel.Redactor" />
+          <AssociationSet Name="FK_Guests_Users" Association="AttendanceDbModel.FK_Guests_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Guest" EntitySet="Guests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Redactors_Users" Association="AttendanceDbModel.FK_Redactors_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Redactor" EntitySet="Redactors" />
+          </AssociationSet>
+          <EntitySet Name="AttendanceSumViews" EntityType="AttendanceDbModel.AttendanceSumView" />
+        </EntityContainer>
+        <EntityType Name="Guest">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="Int32" Nullable="false" />
+          <Property Name="IsPrime" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="AttendanceDbModel.FK_Guests_Users" FromRole="Guest" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Redactor">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="Int32" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="User" Relationship="AttendanceDbModel.FK_Redactors_Users" FromRole="Redactor" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Guests_Users">
+          <End Type="AttendanceDbModel.User" Role="User" Multiplicity="1" />
+          <End Type="AttendanceDbModel.Guest" Role="Guest" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Guest">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Redactors_Users">
+          <End Type="AttendanceDbModel.User" Role="User" Multiplicity="1" />
+          <End Type="AttendanceDbModel.Redactor" Role="Redactor" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Redactor">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AttendanceSumView">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Missing" Type="Int32" />
+          <Property Name="Reasonable" Type="Int32" />
+          <Property Name="UnReasonable" Type="Int32" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище AttendanceDbModelContainer" CdmEntityContainer="AttendanceEntities">
+          <EntitySetMapping Name="Days">
+            <EntityTypeMapping TypeName="AttendanceDbModel.Day">
+              <MappingFragment StoreEntitySet="Days">
+                <ScalarProperty Name="IdDay" ColumnName="IdDay" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="FirstPair" ColumnName="FirstPair" />
+                <ScalarProperty Name="LastPair" ColumnName="LastPair" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LessonAttends">
+            <EntityTypeMapping TypeName="AttendanceDbModel.LessonAttend">
+              <MappingFragment StoreEntitySet="LessonAttends">
+                <ScalarProperty Name="IdLesson" ColumnName="IdLesson" />
+                <ScalarProperty Name="IdStudent" ColumnName="IdStudent" />
+                <ScalarProperty Name="AttendChar" ColumnName="AttendChar" />
+                <ScalarProperty Name="IsReasonable" ColumnName="IsReasonable" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lessons">
+            <EntityTypeMapping TypeName="AttendanceDbModel.Lesson">
+              <MappingFragment StoreEntitySet="Lessons">
+                <ScalarProperty Name="IdLesson" ColumnName="IdLesson" />
+                <ScalarProperty Name="IdDay" ColumnName="IdDay" />
+                <ScalarProperty Name="IdSubject" ColumnName="IdSubject" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Schedules">
+            <EntityTypeMapping TypeName="AttendanceDbModel.Schedule">
+              <MappingFragment StoreEntitySet="Schedules">
+                <ScalarProperty Name="IdSubject" ColumnName="IdSubject" />
+                <ScalarProperty Name="DayOfWeek" ColumnName="DayOfWeek" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="IsEven" ColumnName="IsEven" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="AttendanceDbModel.Student">
+              <MappingFragment StoreEntitySet="Students">
+                <ScalarProperty Name="IsDismissed" ColumnName="IsDismissed" />
+                <ScalarProperty Name="IdStudent" ColumnName="IdStudent" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subjects">
+            <EntityTypeMapping TypeName="AttendanceDbModel.Subject">
+              <MappingFragment StoreEntitySet="Subjects">
+                <ScalarProperty Name="IsActual" ColumnName="IsActual" />
+                <ScalarProperty Name="IdSubject" ColumnName="IdSubject" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="AttendanceDbModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="AttendanceDbModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_Dynamic_Pivot" FunctionName="Хранилище AttendanceDbModel.SP_Dynamic_Pivot" />
+          <FunctionImportMapping FunctionImportName="AddGuest" FunctionName="Хранилище AttendanceDbModel.AddGuest" />
+          <FunctionImportMapping FunctionImportName="AddRedactor" FunctionName="Хранилище AttendanceDbModel.AddRedactor" />
+          <EntitySetMapping Name="Guests">
+            <EntityTypeMapping TypeName="AttendanceDbModel.Guest">
+              <MappingFragment StoreEntitySet="Guests">
+                <ScalarProperty Name="IsPrime" ColumnName="IsPrime" />
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Redactors">
+            <EntityTypeMapping TypeName="AttendanceDbModel.Redactor">
+              <MappingFragment StoreEntitySet="Redactors">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AttendanceSumViews">
+            <EntityTypeMapping TypeName="AttendanceDbModel.AttendanceSumView">
+              <MappingFragment StoreEntitySet="AttendanceSumView">
+                <ScalarProperty Name="UnReasonable" ColumnName="UnReasonable" />
+                <ScalarProperty Name="Reasonable" ColumnName="Reasonable" />
+                <ScalarProperty Name="Missing" ColumnName="Missing" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

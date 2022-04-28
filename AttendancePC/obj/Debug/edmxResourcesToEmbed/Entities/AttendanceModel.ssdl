@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище AttendanceModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Changes">
+    <Key>
+      <PropertyRef Name="IdChange" />
+    </Key>
+    <Property Name="IdChange" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ChangedContent" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="IdUser" Type="int" Nullable="false" />
+    <Property Name="DateOfChange" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Days">
+    <Key>
+      <PropertyRef Name="IdDay" />
+    </Key>
+    <Property Name="IdDay" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="FirstPair" Type="tinyint" Nullable="false" />
+    <Property Name="LastPair" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LessonAttends">
+    <Key>
+      <PropertyRef Name="IdLesson" />
+      <PropertyRef Name="IdStudent" />
+    </Key>
+    <Property Name="IdLesson" Type="int" Nullable="false" />
+    <Property Name="IdStudent" Type="int" Nullable="false" />
+    <Property Name="AttendChar" Type="nchar" MaxLength="1" Nullable="false" />
+    <Property Name="IsReasonable" Type="bit" />
+    <Property Name="Comment" Type="nvarchar" MaxLength="300" />
+  </EntityType>
+  <EntityType Name="Lessons">
+    <Key>
+      <PropertyRef Name="IdLesson" />
+    </Key>
+    <Property Name="IdLesson" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdDay" Type="int" Nullable="false" />
+    <Property Name="IdSubject" Type="int" Nullable="false" />
+    <Property Name="OrderNumber" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Roles">
+    <Key>
+      <PropertyRef Name="IdRole" />
+    </Key>
+    <Property Name="IdRole" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Schedules">
+    <Key>
+      <PropertyRef Name="DayOfWeek" />
+      <PropertyRef Name="OrderNumber" />
+      <PropertyRef Name="IsEven" />
+    </Key>
+    <Property Name="IdSubject" Type="int" Nullable="false" />
+    <Property Name="DayOfWeek" Type="tinyint" Nullable="false" />
+    <Property Name="OrderNumber" Type="tinyint" Nullable="false" />
+    <Property Name="IsEven" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Students">
+    <Key>
+      <PropertyRef Name="IdStudent" />
+    </Key>
+    <Property Name="IdStudent" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Subjects">
+    <Key>
+      <PropertyRef Name="IdSubject" />
+    </Key>
+    <Property Name="IdSubject" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="IdUser" />
+    </Key>
+    <Property Name="IdUser" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Login" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="IdRole" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_ChangeHistory_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="Changes" Type="Self.Changes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="IdUser" />
+      </Principal>
+      <Dependent Role="Changes">
+        <PropertyRef Name="IdUser" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LessonAttends_Lessons">
+    <End Role="Lessons" Type="Self.Lessons" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="LessonAttends" Type="Self.LessonAttends" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lessons">
+        <PropertyRef Name="IdLesson" />
+      </Principal>
+      <Dependent Role="LessonAttends">
+        <PropertyRef Name="IdLesson" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LessonAttends_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="1" />
+    <End Role="LessonAttends" Type="Self.LessonAttends" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="IdStudent" />
+      </Principal>
+      <Dependent Role="LessonAttends">
+        <PropertyRef Name="IdStudent" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Lessons_Days">
+    <End Role="Days" Type="Self.Days" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Lessons" Type="Self.Lessons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Days">
+        <PropertyRef Name="IdDay" />
+      </Principal>
+      <Dependent Role="Lessons">
+        <PropertyRef Name="IdDay" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Lessons_Subjects">
+    <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
+    <End Role="Lessons" Type="Self.Lessons" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subjects">
+        <PropertyRef Name="IdSubject" />
+      </Principal>
+      <Dependent Role="Lessons">
+        <PropertyRef Name="IdSubject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Schedules_Subjects">
+    <End Role="Subjects" Type="Self.Subjects" Multiplicity="1" />
+    <End Role="Schedules" Type="Self.Schedules" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subjects">
+        <PropertyRef Name="IdSubject" />
+      </Principal>
+      <Dependent Role="Schedules">
+        <PropertyRef Name="IdSubject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Roles">
+    <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+    <End Role="Users" Type="Self.Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="IdRole" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="IdRole" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="GetAttendance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="idStudent" Type="int" Mode="In" />
+    <Parameter Name="date" Type="date" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="AttendChar" Type="nchar" MaxLength="1" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="300" />
+          <Property Name="IsReasonable" Type="bit" />
+          <Property Name="IdLesson" Type="int" />
+          <Property Name="IdStudent" Type="int" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+  <EntityContainer Name="Хранилище AttendanceModelContainer">
+    <EntitySet Name="Changes" EntityType="Self.Changes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Days" EntityType="Self.Days" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LessonAttends" EntityType="Self.LessonAttends" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Lessons" EntityType="Self.Lessons" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Schedules" EntityType="Self.Schedules" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Subjects" EntityType="Self.Subjects" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_ChangeHistory_Users" Association="Self.FK_ChangeHistory_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Changes" EntitySet="Changes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LessonAttends_Lessons" Association="Self.FK_LessonAttends_Lessons">
+      <End Role="Lessons" EntitySet="Lessons" />
+      <End Role="LessonAttends" EntitySet="LessonAttends" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LessonAttends_Students" Association="Self.FK_LessonAttends_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="LessonAttends" EntitySet="LessonAttends" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Lessons_Days" Association="Self.FK_Lessons_Days">
+      <End Role="Days" EntitySet="Days" />
+      <End Role="Lessons" EntitySet="Lessons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Lessons_Subjects" Association="Self.FK_Lessons_Subjects">
+      <End Role="Subjects" EntitySet="Subjects" />
+      <End Role="Lessons" EntitySet="Lessons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Schedules_Subjects" Association="Self.FK_Schedules_Subjects">
+      <End Role="Subjects" EntitySet="Subjects" />
+      <End Role="Schedules" EntitySet="Schedules" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Roles" Association="Self.FK_Users_Roles">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AttendanceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Change">
+    <Key>
+      <PropertyRef Name="IdChange" />
+    </Key>
+    <Property Name="IdChange" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ChangedContent" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IdUser" Type="Int32" Nullable="false" />
+    <Property Name="DateOfChange" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="User" Relationship="Self.FK_ChangeHistory_Users" FromRole="Changes" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Lesson">
+    <Key>
+      <PropertyRef Name="IdLesson" />
+    </Key>
+    <Property Name="IdLesson" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdSubject" Type="Int32" Nullable="false" />
+    <Property Name="OrderNumber" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="Subject" Relationship="Self.FK_Lessons_Subjects" FromRole="Lessons" ToRole="Subjects" />
+    <Property Name="IdDay" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Day" Relationship="AttendanceModel.FK_Lessons_Days" FromRole="Lesson" ToRole="Day" />
+    <NavigationProperty Name="LessonAttends" Relationship="AttendanceModel.FK_LessonAttends_Lessons" FromRole="Lesson" ToRole="LessonAttend" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="IdRole" />
+    </Key>
+    <Property Name="IdRole" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Users_Roles" FromRole="Roles" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="IdStudent" />
+    </Key>
+    <Property Name="IdStudent" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="LessonAttends" Relationship="AttendanceModel.FK_LessonAttends_Students" FromRole="Student" ToRole="LessonAttend" />
+  </EntityType>
+  <EntityType Name="Subject">
+    <Key>
+      <PropertyRef Name="IdSubject" />
+    </Key>
+    <Property Name="IdSubject" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Lessons" Relationship="Self.FK_Lessons_Subjects" FromRole="Subjects" ToRole="Lessons" />
+    <NavigationProperty Name="Schedules" Relationship="AttendanceModel.FK_Schedules_Subjects" FromRole="Subject" ToRole="Schedule" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="IdUser" />
+    </Key>
+    <Property Name="IdUser" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Login" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IdRole" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Changes" Relationship="Self.FK_ChangeHistory_Users" FromRole="Users" ToRole="Changes" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_Users_Roles" FromRole="Users" ToRole="Roles" />
+  </EntityType>
+  <Association Name="FK_ChangeHistory_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Changes" Type="Self.Change" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="IdUser" />
+      </Principal>
+      <Dependent Role="Changes">
+        <PropertyRef Name="IdUser" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Lessons_Subjects">
+    <End Role="Subjects" Type="Self.Subject" Multiplicity="1" />
+    <End Role="Lessons" Type="Self.Lesson" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subjects">
+        <PropertyRef Name="IdSubject" />
+      </Principal>
+      <Dependent Role="Lessons">
+        <PropertyRef Name="IdSubject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_Roles">
+    <End Role="Roles" Type="Self.Role" Multiplicity="1" />
+    <End Role="Users" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="IdRole" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="IdRole" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AttendanceEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Changes" EntityType="Self.Change" />
+    <EntitySet Name="Lessons" EntityType="Self.Lesson" />
+    <EntitySet Name="Roles" EntityType="Self.Role" />
+    <EntitySet Name="Students" EntityType="Self.Student" />
+    <EntitySet Name="Subjects" EntityType="Self.Subject" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_ChangeHistory_Users" Association="Self.FK_ChangeHistory_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Changes" EntitySet="Changes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Lessons_Subjects" Association="Self.FK_Lessons_Subjects">
+      <End Role="Subjects" EntitySet="Subjects" />
+      <End Role="Lessons" EntitySet="Lessons" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_Roles" Association="Self.FK_Users_Roles">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <EntitySet Name="Days" EntityType="AttendanceModel.Day" />
+    <AssociationSet Name="FK_Lessons_Days" Association="AttendanceModel.FK_Lessons_Days">
+      <End Role="Day" EntitySet="Days" />
+      <End Role="Lesson" EntitySet="Lessons" />
+    </AssociationSet>
+    <EntitySet Name="LessonAttends" EntityType="AttendanceModel.LessonAttend" />
+    <AssociationSet Name="FK_LessonAttends_Lessons" Association="AttendanceModel.FK_LessonAttends_Lessons">
+      <End Role="Lesson" EntitySet="Lessons" />
+      <End Role="LessonAttend" EntitySet="LessonAttends" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LessonAttends_Students" Association="AttendanceModel.FK_LessonAttends_Students">
+      <End Role="Student" EntitySet="Students" />
+      <End Role="LessonAttend" EntitySet="LessonAttends" />
+    </AssociationSet>
+    <FunctionImport Name="GetAttendance" IsComposable="true" ReturnType="Collection(AttendanceModel.GetAttendance_Result)">
+      <Parameter Name="idStudent" Mode="In" Type="Int32" />
+      <Parameter Name="date" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <EntitySet Name="Schedules" EntityType="AttendanceModel.Schedule" />
+    <AssociationSet Name="FK_Schedules_Subjects" Association="AttendanceModel.FK_Schedules_Subjects">
+      <End Role="Subject" EntitySet="Subjects" />
+      <End Role="Schedule" EntitySet="Schedules" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Day">
+    <Key>
+      <PropertyRef Name="IdDay" />
+    </Key>
+    <Property Name="IdDay" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="FirstPair" Type="Byte" Nullable="false" />
+    <Property Name="LastPair" Type="Byte" Nullable="false" />
+    <NavigationProperty Name="Lessons" Relationship="AttendanceModel.FK_Lessons_Days" FromRole="Day" ToRole="Lesson" />
+  </EntityType>
+  <Association Name="FK_Lessons_Days">
+    <End Type="AttendanceModel.Day" Role="Day" Multiplicity="1" />
+    <End Type="AttendanceModel.Lesson" Role="Lesson" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Day">
+        <PropertyRef Name="IdDay" />
+      </Principal>
+      <Dependent Role="Lesson">
+        <PropertyRef Name="IdDay" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="LessonAttend">
+    <Key>
+      <PropertyRef Name="IdLesson" />
+      <PropertyRef Name="IdStudent" />
+    </Key>
+    <Property Name="IdLesson" Type="Int32" Nullable="false" />
+    <Property Name="IdStudent" Type="Int32" Nullable="false" />
+    <Property Name="AttendChar" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="IsReasonable" Type="Boolean" />
+    <Property Name="Comment" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Lesson" Relationship="AttendanceModel.FK_LessonAttends_Lessons" FromRole="LessonAttend" ToRole="Lesson" />
+    <NavigationProperty Name="Student" Relationship="AttendanceModel.FK_LessonAttends_Students" FromRole="LessonAttend" ToRole="Student" />
+  </EntityType>
+  <Association Name="FK_LessonAttends_Lessons">
+    <End Type="AttendanceModel.Lesson" Role="Lesson" Multiplicity="1" />
+    <End Type="AttendanceModel.LessonAttend" Role="LessonAttend" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lesson">
+        <PropertyRef Name="IdLesson" />
+      </Principal>
+      <Dependent Role="LessonAttend">
+        <PropertyRef Name="IdLesson" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LessonAttends_Students">
+    <End Type="AttendanceModel.Student" Role="Student" Multiplicity="1" />
+    <End Type="AttendanceModel.LessonAttend" Role="LessonAttend" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="IdStudent" />
+      </Principal>
+      <Dependent Role="LessonAttend">
+        <PropertyRef Name="IdStudent" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="GetAttendance_Result">
+    <Property Type="String" Name="AttendChar" Nullable="true" MaxLength="1" />
+    <Property Type="String" Name="Comment" Nullable="true" MaxLength="300" />
+    <Property Type="Boolean" Name="IsReasonable" Nullable="true" />
+    <Property Type="Int32" Name="IdLesson" Nullable="true" />
+    <Property Type="Int32" Name="IdStudent" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="Schedule">
+    <Key>
+      <PropertyRef Name="DayOfWeek" />
+      <PropertyRef Name="OrderNumber" />
+      <PropertyRef Name="IsEven" />
+    </Key>
+    <Property Name="IdSubject" Type="Int32" Nullable="false" />
+    <Property Name="DayOfWeek" Type="Byte" Nullable="false" />
+    <Property Name="OrderNumber" Type="Byte" Nullable="false" />
+    <Property Name="IsEven" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Subject" Relationship="AttendanceModel.FK_Schedules_Subjects" FromRole="Schedule" ToRole="Subject" />
+  </EntityType>
+  <Association Name="FK_Schedules_Subjects">
+    <End Type="AttendanceModel.Subject" Role="Subject" Multiplicity="1" />
+    <End Type="AttendanceModel.Schedule" Role="Schedule" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subject">
+        <PropertyRef Name="IdSubject" />
+      </Principal>
+      <Dependent Role="Schedule">
+        <PropertyRef Name="IdSubject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
