@@ -31,5 +31,9 @@
         {
             set;
         }
+        bool Query
+        {
+            set;
+        }
     }
 }

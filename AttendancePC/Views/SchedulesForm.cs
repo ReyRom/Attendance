@@ -14,6 +14,7 @@ namespace AttendancePC.Views
     {
         Presenters.SchedulesPresenter presenter;
 
+        #region Controls
         public object Schedules 
         { 
             set
@@ -46,6 +47,8 @@ namespace AttendancePC.Views
                 PairColumn.ValueMember = "IdSubject";
             }
         }
+        #endregion
+
         public ShedulesForm()
         {
             InitializeComponent();
@@ -76,5 +79,7 @@ namespace AttendancePC.Views
         {
             presenter.SaveSchedule(SheduleDataGridView.DataSource as List<LessonRepresentation>);
         }
+
+        private void SheduleDataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e){}
     }
 }

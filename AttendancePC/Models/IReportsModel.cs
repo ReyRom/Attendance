@@ -12,6 +12,7 @@ namespace AttendancePC.Models
         DataTable GetSummaryAttendance(DateTime startDate, DateTime endDate);
         void SaveSummaryAttendance( string filename, DataTable summary, DataTable sum);
         DataTable Summary(DateTime startDate, DateTime endDate);
-        object GetSummarySubjects(DateTime startDate, DateTime endDate);
+        object[] GetSummarySubjects(DateTime startDate, DateTime endDate);
+        void SaveSummarySubjects(string filename, DateTime startDate, DateTime endDate, string image);
     }
 }

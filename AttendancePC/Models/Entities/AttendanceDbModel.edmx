@@ -14,6 +14,13 @@
           <Property Name="FirstPair" Type="tinyint" Nullable="false" />
           <Property Name="LastPair" Type="tinyint" Nullable="false" />
         </EntityType>
+        <EntityType Name="Editors">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="int" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="Guests">
           <Key>
             <PropertyRef Name="IdUser" />
@@ -30,7 +37,6 @@
           <Property Name="IdStudent" Type="int" Nullable="false" />
           <Property Name="AttendChar" Type="nchar" MaxLength="1" Nullable="false" />
           <Property Name="IsReasonable" Type="bit" />
-          <Property Name="Comment" Type="nvarchar" MaxLength="300" />
         </EntityType>
         <EntityType Name="Lessons">
           <Key>
@@ -40,13 +46,6 @@
           <Property Name="IdDay" Type="int" Nullable="false" />
           <Property Name="IdSubject" Type="int" Nullable="false" />
           <Property Name="OrderNumber" Type="tinyint" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Redactors">
-          <Key>
-            <PropertyRef Name="IdUser" />
-          </Key>
-          <Property Name="IdUser" Type="int" Nullable="false" />
-          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Schedules">
           <Key>
@@ -169,12 +168,12 @@
         </Association>
         <Association Name="FK_Redactors_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="Redactors" Type="Self.Redactors" Multiplicity="0..1" />
+          <End Role="Editors" Type="Self.Editors" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="IdUser" />
             </Principal>
-            <Dependent Role="Redactors">
+            <Dependent Role="Editors">
               <PropertyRef Name="IdUser" />
             </Dependent>
           </ReferentialConstraint>
@@ -210,10 +209,10 @@
         </Function>
         <EntityContainer Name="Хранилище AttendanceDbModelContainer">
           <EntitySet Name="Days" EntityType="Self.Days" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Editors" EntityType="Self.Editors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Guests" EntityType="Self.Guests" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LessonAttends" EntityType="Self.LessonAttends" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lessons" EntityType="Self.Lessons" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Redactors" EntityType="Self.Redactors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Schedules" EntityType="Self.Schedules" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Subjects" EntityType="Self.Subjects" Schema="dbo" store:Type="Tables" />
@@ -249,7 +248,7 @@
           </AssociationSet>
           <AssociationSet Name="FK_Redactors_Users" Association="Self.FK_Redactors_Users">
             <End Role="Users" EntitySet="Users" />
-            <End Role="Redactors" EntitySet="Redactors" />
+            <End Role="Editors" EntitySet="Editors" />
           </AssociationSet>
           <AssociationSet Name="FK_Schedules_Subjects" Association="Self.FK_Schedules_Subjects">
             <End Role="Subjects" EntitySet="Subjects" />
@@ -270,19 +269,6 @@
           <Property Name="LastPair" Type="Byte" Nullable="false" />
           <NavigationProperty Name="Lessons" Relationship="Self.FK_Lessons_Days" FromRole="Days" ToRole="Lessons" />
         </EntityType>
-        <EntityType Name="LessonAttend">
-          <Key>
-            <PropertyRef Name="IdLesson" />
-            <PropertyRef Name="IdStudent" />
-          </Key>
-          <Property Name="IdLesson" Type="Int32" Nullable="false" />
-          <Property Name="IdStudent" Type="Int32" Nullable="false" />
-          <Property Name="AttendChar" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="IsReasonable" Type="Boolean" />
-          <Property Name="Comment" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Lesson" Relationship="Self.FK_LessonAttends_Lessons" FromRole="LessonAttends" ToRole="Lessons" />
-          <NavigationProperty Name="Student" Relationship="Self.FK_LessonAttends_Students" FromRole="LessonAttends" ToRole="Students" />
-        </EntityType>
         <EntityType Name="Lesson">
           <Key>
             <PropertyRef Name="IdLesson" />
@@ -292,8 +278,8 @@
           <Property Name="IdSubject" Type="Int32" Nullable="false" />
           <Property Name="OrderNumber" Type="Byte" Nullable="false" />
           <NavigationProperty Name="Day" Relationship="Self.FK_Lessons_Days" FromRole="Lessons" ToRole="Days" />
-          <NavigationProperty Name="LessonAttends" Relationship="Self.FK_LessonAttends_Lessons" FromRole="Lessons" ToRole="LessonAttends" />
           <NavigationProperty Name="Subject" Relationship="Self.FK_Lessons_Subjects" FromRole="Lessons" ToRole="Subjects" />
+          <NavigationProperty Name="LessonAttends" Relationship="AttendanceDbModel.FK_LessonAttends_Lessons" FromRole="Lesson" ToRole="LessonAttend" />
         </EntityType>
         <EntityType Name="Schedule">
           <Key>
@@ -313,8 +299,8 @@
           </Key>
           <Property Name="IdStudent" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="LessonAttends" Relationship="Self.FK_LessonAttends_Students" FromRole="Students" ToRole="LessonAttends" />
           <Property Name="IsDismissed" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="LessonAttends" Relationship="AttendanceDbModel.FK_LessonAttends_Students" FromRole="Student" ToRole="LessonAttend" />
         </EntityType>
         <EntityType Name="Subject">
           <Key>
@@ -336,15 +322,6 @@
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="IdUser" />
-          </Key>
-          <Property Name="IdUser" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Guest" Relationship="AttendanceDbModel.FK_Guests_Users" FromRole="User" ToRole="Guest" />
-          <NavigationProperty Name="Redactor" Relationship="AttendanceDbModel.FK_Redactors_Users" FromRole="User" ToRole="Redactor" />
-          </EntityType>
         <Association Name="FK_Lessons_Days">
           <End Role="Days" Type="Self.Day" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -356,32 +333,6 @@
             </Principal>
             <Dependent Role="Lessons">
               <PropertyRef Name="IdDay" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LessonAttends_Lessons">
-          <End Role="Lessons" Type="Self.Lesson" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="LessonAttends" Type="Self.LessonAttend" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lessons">
-              <PropertyRef Name="IdLesson" />
-            </Principal>
-            <Dependent Role="LessonAttends">
-              <PropertyRef Name="IdLesson" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LessonAttends_Students">
-          <End Role="Students" Type="Self.Student" Multiplicity="1" />
-          <End Role="LessonAttends" Type="Self.LessonAttend" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Students">
-              <PropertyRef Name="IdStudent" />
-            </Principal>
-            <Dependent Role="LessonAttends">
-              <PropertyRef Name="IdStudent" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -411,24 +362,14 @@
         </Association>
         <EntityContainer Name="AttendanceEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Days" EntityType="Self.Day" />
-          <EntitySet Name="LessonAttends" EntityType="Self.LessonAttend" />
           <EntitySet Name="Lessons" EntityType="Self.Lesson" />
           <EntitySet Name="Schedules" EntityType="Self.Schedule" />
           <EntitySet Name="Students" EntityType="Self.Student" />
           <EntitySet Name="Subjects" EntityType="Self.Subject" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
-          <EntitySet Name="Users" EntityType="Self.User" />
           <AssociationSet Name="FK_Lessons_Days" Association="Self.FK_Lessons_Days">
             <End Role="Days" EntitySet="Days" />
             <End Role="Lessons" EntitySet="Lessons" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LessonAttends_Lessons" Association="Self.FK_LessonAttends_Lessons">
-            <End Role="Lessons" EntitySet="Lessons" />
-            <End Role="LessonAttends" EntitySet="LessonAttends" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LessonAttends_Students" Association="Self.FK_LessonAttends_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="LessonAttends" EntitySet="LessonAttends" />
           </AssociationSet>
           <AssociationSet Name="FK_Lessons_Subjects" Association="Self.FK_Lessons_Subjects">
             <End Role="Subjects" EntitySet="Subjects" />
@@ -459,16 +400,26 @@
             <Parameter Name="password" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="Guests" EntityType="AttendanceDbModel.Guest" />
-          <EntitySet Name="Redactors" EntityType="AttendanceDbModel.Redactor" />
+          <EntitySet Name="LessonAttends" EntityType="AttendanceDbModel.LessonAttend" />
+          <AssociationSet Name="FK_LessonAttends_Lessons" Association="AttendanceDbModel.FK_LessonAttends_Lessons">
+            <End Role="Lesson" EntitySet="Lessons" />
+            <End Role="LessonAttend" EntitySet="LessonAttends" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LessonAttends_Students" Association="AttendanceDbModel.FK_LessonAttends_Students">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="LessonAttend" EntitySet="LessonAttends" />
+          </AssociationSet>
+          <EntitySet Name="AttendanceSumViews" EntityType="AttendanceDbModel.AttendanceSumView" />
+          <EntitySet Name="Editors" EntityType="AttendanceDbModel.Editor" />
+          <EntitySet Name="Users" EntityType="AttendanceDbModel.User" />
+          <AssociationSet Name="FK_Redactors_Users" Association="AttendanceDbModel.FK_Redactors_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Editor" EntitySet="Editors" />
+          </AssociationSet>
           <AssociationSet Name="FK_Guests_Users" Association="AttendanceDbModel.FK_Guests_Users">
             <End Role="User" EntitySet="Users" />
             <End Role="Guest" EntitySet="Guests" />
           </AssociationSet>
-          <AssociationSet Name="FK_Redactors_Users" Association="AttendanceDbModel.FK_Redactors_Users">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Redactor" EntitySet="Redactors" />
-          </AssociationSet>
-          <EntitySet Name="AttendanceSumViews" EntityType="AttendanceDbModel.AttendanceSumView" />
         </EntityContainer>
         <EntityType Name="Guest">
           <Key>
@@ -478,35 +429,41 @@
           <Property Name="IsPrime" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="User" Relationship="AttendanceDbModel.FK_Guests_Users" FromRole="Guest" ToRole="User" />
         </EntityType>
-        <EntityType Name="Redactor">
+        <EntityType Name="LessonAttend">
           <Key>
-            <PropertyRef Name="IdUser" />
+            <PropertyRef Name="IdLesson" />
+            <PropertyRef Name="IdStudent" />
           </Key>
-          <Property Name="IdUser" Type="Int32" Nullable="false" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="User" Relationship="AttendanceDbModel.FK_Redactors_Users" FromRole="Redactor" ToRole="User" />
+          <Property Name="IdLesson" Type="Int32" Nullable="false" />
+          <Property Name="IdStudent" Type="Int32" Nullable="false" />
+          <Property Name="AttendChar" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="IsReasonable" Type="Boolean" />
+          <NavigationProperty Name="Lesson" Relationship="AttendanceDbModel.FK_LessonAttends_Lessons" FromRole="LessonAttend" ToRole="Lesson" />
+          <NavigationProperty Name="Student" Relationship="AttendanceDbModel.FK_LessonAttends_Students" FromRole="LessonAttend" ToRole="Student" />
         </EntityType>
-        <Association Name="FK_Guests_Users">
-          <End Type="AttendanceDbModel.User" Role="User" Multiplicity="1" />
-          <End Type="AttendanceDbModel.Guest" Role="Guest" Multiplicity="0..1" />
+        <Association Name="FK_LessonAttends_Lessons">
+          <End Type="AttendanceDbModel.Lesson" Role="Lesson" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="AttendanceDbModel.LessonAttend" Role="LessonAttend" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="IdUser" />
+            <Principal Role="Lesson">
+              <PropertyRef Name="IdLesson" />
             </Principal>
-            <Dependent Role="Guest">
-              <PropertyRef Name="IdUser" />
+            <Dependent Role="LessonAttend">
+              <PropertyRef Name="IdLesson" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Redactors_Users">
-          <End Type="AttendanceDbModel.User" Role="User" Multiplicity="1" />
-          <End Type="AttendanceDbModel.Redactor" Role="Redactor" Multiplicity="0..1" />
+        <Association Name="FK_LessonAttends_Students">
+          <End Type="AttendanceDbModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="AttendanceDbModel.LessonAttend" Role="LessonAttend" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="IdUser" />
+            <Principal Role="Student">
+              <PropertyRef Name="IdStudent" />
             </Principal>
-            <Dependent Role="Redactor">
-              <PropertyRef Name="IdUser" />
+            <Dependent Role="LessonAttend">
+              <PropertyRef Name="IdStudent" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -519,6 +476,47 @@
           <Property Name="Reasonable" Type="Int32" />
           <Property Name="UnReasonable" Type="Int32" />
         </EntityType>
+        <EntityType Name="Editor">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="Int32" Nullable="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="User" Relationship="AttendanceDbModel.FK_Redactors_Users" FromRole="Editor" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="IdUser" />
+          </Key>
+          <Property Name="IdUser" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Editor" Relationship="AttendanceDbModel.FK_Redactors_Users" FromRole="User" ToRole="Editor" />
+          <NavigationProperty Name="Guest" Relationship="AttendanceDbModel.FK_Guests_Users" FromRole="User" ToRole="Guest" />
+        </EntityType>
+        <Association Name="FK_Redactors_Users">
+          <End Type="AttendanceDbModel.User" Role="User" Multiplicity="1" />
+          <End Type="AttendanceDbModel.Editor" Role="Editor" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Editor">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Guests_Users">
+          <End Type="AttendanceDbModel.User" Role="User" Multiplicity="1" />
+          <End Type="AttendanceDbModel.Guest" Role="Guest" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="IdUser" />
+            </Principal>
+            <Dependent Role="Guest">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -532,17 +530,6 @@
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="FirstPair" ColumnName="FirstPair" />
                 <ScalarProperty Name="LastPair" ColumnName="LastPair" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LessonAttends">
-            <EntityTypeMapping TypeName="AttendanceDbModel.LessonAttend">
-              <MappingFragment StoreEntitySet="LessonAttends">
-                <ScalarProperty Name="IdLesson" ColumnName="IdLesson" />
-                <ScalarProperty Name="IdStudent" ColumnName="IdStudent" />
-                <ScalarProperty Name="AttendChar" ColumnName="AttendChar" />
-                <ScalarProperty Name="IsReasonable" ColumnName="IsReasonable" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -595,14 +582,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="AttendanceDbModel.User">
-              <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
-                <ScalarProperty Name="Login" ColumnName="Login" />
-                </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SP_Dynamic_Pivot" FunctionName="Хранилище AttendanceDbModel.SP_Dynamic_Pivot" />
           <FunctionImportMapping FunctionImportName="AddGuest" FunctionName="Хранилище AttendanceDbModel.AddGuest" />
           <FunctionImportMapping FunctionImportName="AddRedactor" FunctionName="Хранилище AttendanceDbModel.AddRedactor" />
@@ -614,11 +593,13 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Redactors">
-            <EntityTypeMapping TypeName="AttendanceDbModel.Redactor">
-              <MappingFragment StoreEntitySet="Redactors">
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+          <EntitySetMapping Name="LessonAttends">
+            <EntityTypeMapping TypeName="AttendanceDbModel.LessonAttend">
+              <MappingFragment StoreEntitySet="LessonAttends">
+                <ScalarProperty Name="IsReasonable" ColumnName="IsReasonable" />
+                <ScalarProperty Name="AttendChar" ColumnName="AttendChar" />
+                <ScalarProperty Name="IdStudent" ColumnName="IdStudent" />
+                <ScalarProperty Name="IdLesson" ColumnName="IdLesson" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -629,6 +610,22 @@
                 <ScalarProperty Name="Reasonable" ColumnName="Reasonable" />
                 <ScalarProperty Name="Missing" ColumnName="Missing" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Editors">
+            <EntityTypeMapping TypeName="AttendanceDbModel.Editor">
+              <MappingFragment StoreEntitySet="Editors">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="AttendanceDbModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

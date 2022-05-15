@@ -1,22 +1,17 @@
-﻿using AttendancePC.Models.Entities;
+﻿using AttendancePC.Presenters;
 using AttendancePC.Supporting;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace AttendancePC.Views
 {
     public partial class AttendanceForm : Form, IAttendanceView
-    {   
-        Presenters.AttendancePresenter presenter;
+    {
+        AttendancePresenter presenter;
         public event EventHandler<EventArgs> DataRenew;
 
+        #region Controls
         public object[] Headers
         {
             set
@@ -38,9 +33,9 @@ namespace AttendancePC.Views
 
         public DateTime Date
         {
-            set 
-            { 
-                LessonsDateTimePicker.Value = value; 
+            set
+            {
+                LessonsDateTimePicker.Value = value;
             }
             get
             {
@@ -48,10 +43,10 @@ namespace AttendancePC.Views
             }
         }
 
-        public object Students 
+        public object Students
         {
-            set 
-            { 
+            set
+            {
                 StudentToolStripComboBox.ComboBox.DataSource = value;
             }
         }
@@ -64,10 +59,23 @@ namespace AttendancePC.Views
             }
         }
 
+        public object Order
+        {
+            set 
+            {
+                OrderToolStripComboBox.ComboBox.DataSource = value;
+            }
+            get
+            {
+                return OrderToolStripComboBox.SelectedIndex;
+            }
+        }
+        #endregion
+
         public AttendanceForm()
         {
-            InitializeComponent();            
-            presenter = new Presenters.AttendancePresenter(this);
+            InitializeComponent();
+            presenter = new AttendancePresenter(this);
             DataRenew += AttendanceForm_DataRenew;
 
             StudentToolStripComboBox.ComboBox.DisplayMember = "Name";
@@ -82,6 +90,7 @@ namespace AttendancePC.Views
         {
             presenter.LoadStudents();
             presenter.LoadAttends(Global.CurrentDate);
+            EditToolStripButton.Visible = Global.CurrentUser.Editor != null;
         }
 
         private void AttendanceDataGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -110,6 +119,11 @@ namespace AttendancePC.Views
         }
 
         private void StudentToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            presenter.LoadAttends(Global.CurrentDate);
+        }
+
+        private void OrderToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             presenter.LoadAttends(Global.CurrentDate);
         }

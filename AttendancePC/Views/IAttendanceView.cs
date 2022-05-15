@@ -14,5 +14,6 @@ namespace AttendancePC.Views
         DateTime Date { set; get; }
         object Students { set; }
         object Filter { get; }
+        object Order { get; set; }
     }
 }

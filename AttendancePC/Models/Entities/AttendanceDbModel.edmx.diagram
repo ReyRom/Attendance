@@ -6,23 +6,23 @@
     <edmx:Diagrams>
       <Diagram DiagramId="6b7cae622e1c4fb5a055e6bc349e9404" Name="Diagram1" ZoomLevel="86">
         <EntityTypeShape EntityType="AttendanceDbModel.Day" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="AttendanceDbModel.LessonAttend" Width="1.5" PointX="5.625" PointY="3.5" IsExpanded="true" />
         <EntityTypeShape EntityType="AttendanceDbModel.Lesson" Width="1.5" PointX="3.375" PointY="3.5" IsExpanded="true" />
         <EntityTypeShape EntityType="AttendanceDbModel.Schedule" Width="1.5" PointX="3" PointY="6.875" IsExpanded="true" />
         <EntityTypeShape EntityType="AttendanceDbModel.Student" Width="1.5" PointX="5.625" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="AttendanceDbModel.Subject" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
         <EntityTypeShape EntityType="AttendanceDbModel.sysdiagram" Width="1.5" PointX="7.75" PointY="1.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="AttendanceDbModel.User" Width="1.5" PointX="8" PointY="7" IsExpanded="true" />
         <AssociationConnector Association="AttendanceDbModel.FK_Lessons_Days" ManuallyRouted="false" />
-        <AssociationConnector Association="AttendanceDbModel.FK_LessonAttends_Lessons" ManuallyRouted="false" />
-        <AssociationConnector Association="AttendanceDbModel.FK_LessonAttends_Students" ManuallyRouted="false" />
         <AssociationConnector Association="AttendanceDbModel.FK_Lessons_Subjects" ManuallyRouted="false" />
         <AssociationConnector Association="AttendanceDbModel.FK_Schedules_Subjects" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="AttendanceDbModel.Guest" Width="1.5" PointX="10.25" PointY="5.875" />
-        <EntityTypeShape EntityType="AttendanceDbModel.Redactor" Width="1.5" PointX="10.25" PointY="8.25" />
-        <AssociationConnector Association="AttendanceDbModel.FK_Guests_Users" />
-        <AssociationConnector Association="AttendanceDbModel.FK_Redactors_Users" />
+        <EntityTypeShape EntityType="AttendanceDbModel.Guest" Width="1.5" PointX="8" PointY="7.375" />
+        <EntityTypeShape EntityType="AttendanceDbModel.LessonAttend" Width="1.5" PointX="5.625" PointY="3.5" />
+        <AssociationConnector Association="AttendanceDbModel.FK_LessonAttends_Lessons" />
+        <AssociationConnector Association="AttendanceDbModel.FK_LessonAttends_Students" />
         <EntityTypeShape EntityType="AttendanceDbModel.AttendanceSumView" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="AttendanceDbModel.Editor" Width="1.5" PointX="7.875" PointY="9.625" />
+        <EntityTypeShape EntityType="AttendanceDbModel.User" Width="1.5" PointX="5.5" PointY="8.375" />
+        <AssociationConnector Association="AttendanceDbModel.FK_Redactors_Users" />
+        <AssociationConnector Association="AttendanceDbModel.FK_Guests_Users" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

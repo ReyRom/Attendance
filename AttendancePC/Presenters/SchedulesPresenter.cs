@@ -3,13 +3,10 @@ using AttendancePC.Supporting;
 using AttendancePC.Views;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AttendancePC.Presenters
 {
-    public class SchedulesPresenter: IPresenter
+    public class SchedulesPresenter : IPresenter
     {
         ISchedulesView view;
         ISchedulesModel model;
@@ -27,39 +24,99 @@ namespace AttendancePC.Presenters
 
         private void Global_DataChanged()
         {
-            LoadShedule(Global.CurrentDate);
+            try
+            {
+                LoadShedule(Global.CurrentDate);
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         public void LoadShedule(DateTime date)
         {
-            view.Schedule = model.LoadShedule(date);
+            try
+            {
+                view.Schedule = model.LoadShedule(date);
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
+
         public void LoadShedule(List<LessonRepresentation> data)
         {
-            view.Schedule = model.LoadShedule(data);
+            try
+            {
+                view.Schedule = model.LoadShedule(data);
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
         public void GetDaysOfWeek()
         {
-            view.DaysOfWeek = model.GetDaysOfWeek();
+            try
+            {
+                view.DaysOfWeek = model.GetDaysOfWeek();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
+
         public void GetShedules()
         {
-            view.Schedules = model.GetShedules();
+            try
+            {
+                view.Schedules = model.GetShedules();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
-        public void GetSubjects() 
+
+        public void GetSubjects()
         {
-            view.Subjects = model.GetSubjects();
+            try
+            {
+                view.Subjects = model.GetSubjects();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         public void SaveScheduleTemplate(List<LessonRepresentation> lessons, byte dayOfWeek, bool isEven)
-        { 
-            model.SaveScheduleTemplate(lessons, dayOfWeek, isEven);
-            GetShedules();
+        {
+            try
+            {
+                model.SaveScheduleTemplate(lessons, dayOfWeek, isEven);
+                GetShedules();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
+
         public void SaveSchedule(List<LessonRepresentation> lessons)
         {
-            model.SaveSchedule(lessons);
-            RenewEvent?.Invoke(this, new EventArgs());
+            try
+            {
+                model.SaveSchedule(lessons);
+                RenewEvent?.Invoke(this, new EventArgs());
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
     }
 }

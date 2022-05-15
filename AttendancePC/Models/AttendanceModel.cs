@@ -10,13 +10,14 @@ namespace AttendancePC.Models
 {
     public class AttendanceModel : IAttendanceModel
     {
-        public DataTable LoadAttends(DateTime date, Student filter)
+        public DataTable LoadAttends(DateTime date, Student filter, int order)
         {
             try
             {
                 DataTable table = new DataTable();
                 var count = Core.Context.Days.Where(d => DbFunctions.DiffDays(d.Date, date) == 0).FirstOrDefault()?.LastPair ?? 0;
-                var data = Core.Context.Students.Where(s => !s.IsDismissed).Where(s => s.IdStudent == filter.IdStudent || filter.IdStudent == 0)
+                var data = Core.Context.Students.Where(s => !s.IsDismissed)
+                    .Where(s => s.IdStudent == filter.IdStudent || filter.IdStudent == 0)
                     .Select(s => new StudentsAttendanceRepresentation
                     {
                         Name = s.Name,
@@ -24,6 +25,19 @@ namespace AttendancePC.Models
                         LessonAttends = s.LessonAttends.Where(d => DbFunctions.DiffDays(d.Lesson.Day.Date, date) == 0).ToList(),
                         Lessons = Core.Context.Lessons.Where(d => DbFunctions.DiffDays(d.Day.Date, date) == 0).ToList()
                     }).ToList();
+
+                switch (order)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        data = data.OrderBy(d => d.Name).ToList();
+                        break;
+                    case 2:
+                        data = data.OrderByDescending(d => d.Name).ToList();
+                        break;
+                }
+
                 DataColumn dataColumn = new DataColumn();
                 table.Columns.Add(new DataColumn("Name", typeof(string)));
                 for (int i = 1; i <= 6; i++)
@@ -48,7 +62,8 @@ namespace AttendancePC.Models
                 var pairs = new List<string>();
                 for (int i = 1; i <= 6; i++)
                 {
-                    pairs.Add(Core.Context.Lessons.Where(x => DbFunctions.DiffDays(x.Day.Date, date) == 0 && x.OrderNumber == i).Select(x => x.Subject.Name).FirstOrDefault() ?? "-");
+                    pairs.Add(Core.Context.Lessons.Where(x => DbFunctions.DiffDays(x.Day.Date, date) == 0 && x.OrderNumber == i)
+                        .Select(x => x.Subject.Name).FirstOrDefault() ?? "-");
                 }
                 return pairs;
             }
@@ -68,7 +83,6 @@ namespace AttendancePC.Models
                         Core.Context.LessonAttends.Add(new LessonAttend
                         {
                             AttendChar = "-",
-                            Comment = item.Comment,
                             IsReasonable = false,
                             IdLesson = (int)item.IdLesson,
                             IdStudent = (int)item.IdStudent

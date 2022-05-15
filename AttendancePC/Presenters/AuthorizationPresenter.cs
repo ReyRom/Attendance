@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data;
+using AttendancePC.Supporting;
 
 namespace AttendancePC.Presenters
 {
@@ -30,7 +32,7 @@ namespace AttendancePC.Presenters
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                UserFeedback.ErrorMessage(ex);
             }
         }
     }

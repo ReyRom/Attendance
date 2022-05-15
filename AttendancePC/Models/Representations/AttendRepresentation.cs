@@ -9,14 +9,12 @@ namespace AttendancePC.Models
     public class AttendRepresentation
     {
         public string AttendChar { get; set; }
-        public string Comment { get; set; }
         public bool? IsReasonable { get; set; }
         public int? IdLesson { get; set; }
         public int? IdStudent { get; set; }
         public AttendRepresentation()
         {
             AttendChar = ""; 
-            Comment = ""; 
             IdLesson = null; 
             IdStudent = null;
             IsReasonable = null;

@@ -1,5 +1,6 @@
 ﻿using AttendancePC.Models.Entities;
 using AttendancePC.Supporting;
+using System;
 using System.Linq;
 
 namespace AttendancePC.Presenters
@@ -8,38 +9,78 @@ namespace AttendancePC.Presenters
     {
         public void AddGuest(string login, bool isPrime)
         {
-            Core.Context.AddGuest(login, isPrime);
-            Core.Context.SaveChanges();
+            try
+            {
+                Core.Context.AddGuest(login, isPrime);
+                Core.Context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public void AddRedactor(string login, string password)
         {
-            Core.Context.AddRedactor(login, password);
-            Core.Context.SaveChanges();
+            try
+            {
+                Core.Context.AddRedactor(login, password);
+                Core.Context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public void DeleteGuest(object item)
         {
-            Core.Context.Guests.Remove((item as Guest));
-            Core.Context.Users.Remove((item as Guest).User);
-            Core.Context.SaveChanges();
+            try
+            {
+                Core.Context.Guests.Remove((item as User).Guest);
+                Core.Context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public void DeleteRedactor(object item)
         {
-            Core.Context.Redactors.Remove((item as Redactor));
-            Core.Context.Users.Remove((item as Redactor).User);
-            Core.Context.SaveChanges();
+            try
+            {
+                Core.Context.Editors.Remove((item as User).Editor);
+                Core.Context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public object GetGuests()
         {
-            return Core.Context.Guests.Select(x => x.User).ToList();
+            try
+            {
+                return Core.Context.Guests.Select(x => x.User).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public object GetRedactors()
         {
-            return Core.Context.Redactors.Select(x => x.User).ToList();
+            try
+            {
+                return Core.Context.Editors.Select(x => x.User).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

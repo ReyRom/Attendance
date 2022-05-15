@@ -17,7 +17,7 @@ namespace AttendancePC.Models.Entities
         public int IdUser { get; set; }
         public string Login { get; set; }
     
+        public virtual Editor Editor { get; set; }
         public virtual Guest Guest { get; set; }
-        public virtual Redactor Redactor { get; set; }
     }
 }

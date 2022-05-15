@@ -1,12 +1,4 @@
-﻿using AttendancePC.Views;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
 
 namespace AttendancePC.Views
@@ -15,11 +7,12 @@ namespace AttendancePC.Views
     {
         Presenters.MainPresenter presenter;
 
+        #region Controls
         public string UserName
         {
             set
             {
-                signOutToolStripMenuItem.Text = "SignOut "+value;
+                signOutToolStripMenuItem.Text = "Выйти " + value;
             }
         }
 
@@ -27,35 +20,43 @@ namespace AttendancePC.Views
         {
             set
             {
-                attendanceToolStripMenuItem.Visible = value;
+                AttendanceToolStripMenuItem.Visible = value;
             }
         }
         public bool Schedules
         {
             set
             {
-                schedulesToolStripMenuItem.Visible = value;
+                SchedulesToolStripMenuItem.Visible = value;
             }
         }
         public bool Reports
         {
             set
             {
-                reportsToolStripMenuItem.Visible = value;
+                ReportsToolStripMenuItem.Visible = value;
             }
         }
         public bool Connection
         {
             set
             {
-                connectionToolStripMenuItem.Visible = value;
+                ConnectionToolStripMenuItem.Visible = value;
             }
         }
         public bool Settings
         {
             set
             {
-                settingsToolStripMenuItem.Visible = value;
+                SettingsToolStripMenuItem.Visible = value;
+            }
+        }
+
+        public bool Query
+        {
+            set
+            {
+                QueryToolStripMenuItem.Visible = value;
             }
         }
 
@@ -67,6 +68,7 @@ namespace AttendancePC.Views
                 signInToolStripMenuItem.Visible = !value;
             }
         }
+        #endregion
 
         public MainForm()
         {
@@ -79,24 +81,28 @@ namespace AttendancePC.Views
         {
             presenter.Attendance.MdiParent = this;
             presenter.Attendance.Show();
+            presenter.SetStyle(this);
         }
 
         private void SchedulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             presenter.Schedules.MdiParent = this;
             presenter.Schedules.Show();
+            presenter.SetStyle(this);
         }
 
         private void ReportsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             presenter.Reports.MdiParent = this;
             presenter.Reports.Show();
+            presenter.SetStyle(this);
         }
 
         private void SignInToolStripMenuItem_Click(object sender, EventArgs e)
         {
             presenter.Authorization.MdiParent = this;
             presenter.Authorization.Show();
+            presenter.SetStyle(this);
         }
 
         private void SignOutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -108,23 +114,41 @@ namespace AttendancePC.Views
         {
             presenter.Users.MdiParent = this;
             presenter.Users.Show();
+            presenter.SetStyle(this);
         }
 
         private void StudentsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             presenter.Students.MdiParent = this;
             presenter.Students.Show();
+            presenter.SetStyle(this);
         }
 
         private void SubjectsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             presenter.Subjects.MdiParent = this;
             presenter.Subjects.Show();
+            presenter.SetStyle(this);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             presenter.LoadMain();
+            presenter.SetStyle(this);
+        }
+
+        private void ConnectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            presenter.Connection.MdiParent = this;
+            presenter.Connection.Show();
+            presenter.SetStyle(this);
+        }
+
+        private void QueryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            presenter.Query.MdiParent = this;
+            presenter.Query.Show();
+            presenter.SetStyle(this);
         }
     }
 }

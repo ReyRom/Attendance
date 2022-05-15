@@ -37,11 +37,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.ScheduleDayComboBox = new System.Windows.Forms.ComboBox();
             this.SheduleDataGridView = new System.Windows.Forms.DataGridView();
-            this.PairNumberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PairColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ScheduleComboBox = new System.Windows.Forms.ComboBox();
             this.ConfirmSheduleButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.PairNumberColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PairColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.SheduleDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -83,9 +83,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 404);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(12, 397);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(122, 13);
+            this.label2.Size = new System.Drawing.Size(182, 20);
             this.label2.TabIndex = 26;
             this.label2.Text = "Сохранить как шаблон";
             // 
@@ -101,6 +102,9 @@
             // 
             // SheduleDataGridView
             // 
+            this.SheduleDataGridView.AllowUserToAddRows = false;
+            this.SheduleDataGridView.AllowUserToDeleteRows = false;
+            this.SheduleDataGridView.AllowUserToResizeRows = false;
             this.SheduleDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -139,23 +143,7 @@
             this.SheduleDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.SheduleDataGridView.Size = new System.Drawing.Size(382, 237);
             this.SheduleDataGridView.TabIndex = 23;
-            // 
-            // PairNumberColumn
-            // 
-            this.PairNumberColumn.DataPropertyName = "OrderNumber";
-            this.PairNumberColumn.FillWeight = 40.60914F;
-            this.PairNumberColumn.HeaderText = "№";
-            this.PairNumberColumn.Name = "PairNumberColumn";
-            // 
-            // PairColumn
-            // 
-            this.PairColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.PairColumn.DataPropertyName = "IdSubject";
-            this.PairColumn.FillWeight = 159.3909F;
-            this.PairColumn.HeaderText = "Пара";
-            this.PairColumn.Name = "PairColumn";
-            this.PairColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.PairColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.SheduleDataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.SheduleDataGridView_DataError);
             // 
             // ScheduleComboBox
             // 
@@ -184,11 +172,30 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label1.Location = new System.Drawing.Point(11, 325);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 13);
+            this.label1.Size = new System.Drawing.Size(68, 20);
             this.label1.TabIndex = 24;
             this.label1.Text = "Шаблон";
+            // 
+            // PairNumberColumn
+            // 
+            this.PairNumberColumn.DataPropertyName = "OrderNumber";
+            this.PairNumberColumn.FillWeight = 40.60914F;
+            this.PairNumberColumn.HeaderText = "№";
+            this.PairNumberColumn.Name = "PairNumberColumn";
+            this.PairNumberColumn.ReadOnly = true;
+            // 
+            // PairColumn
+            // 
+            this.PairColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.PairColumn.DataPropertyName = "IdSubject";
+            this.PairColumn.FillWeight = 159.3909F;
+            this.PairColumn.HeaderText = "Пара";
+            this.PairColumn.Name = "PairColumn";
+            this.PairColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.PairColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // ShedulesForm
             // 
@@ -206,7 +213,7 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ShedulesForm";
-            this.Text = "SchedulesForm";
+            this.Text = "Расписание";
             this.Load += new System.EventHandler(this.ShedulesForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.SheduleDataGridView)).EndInit();
             this.ResumeLayout(false);
@@ -222,10 +229,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox ScheduleDayComboBox;
         private System.Windows.Forms.DataGridView SheduleDataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PairNumberColumn;
-        private System.Windows.Forms.DataGridViewComboBoxColumn PairColumn;
         private System.Windows.Forms.ComboBox ScheduleComboBox;
         private System.Windows.Forms.Button ConfirmSheduleButton;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PairNumberColumn;
+        private System.Windows.Forms.DataGridViewComboBoxColumn PairColumn;
     }
 }

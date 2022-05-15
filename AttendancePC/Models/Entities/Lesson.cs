@@ -26,8 +26,8 @@ namespace AttendancePC.Models.Entities
         public byte OrderNumber { get; set; }
     
         public virtual Day Day { get; set; }
+        public virtual Subject Subject { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LessonAttend> LessonAttends { get; set; }
-        public virtual Subject Subject { get; set; }
     }
 }

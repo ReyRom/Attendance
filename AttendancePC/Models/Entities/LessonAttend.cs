@@ -18,7 +18,6 @@ namespace AttendancePC.Models.Entities
         public int IdStudent { get; set; }
         public string AttendChar { get; set; }
         public Nullable<bool> IsReasonable { get; set; }
-        public string Comment { get; set; }
     
         public virtual Lesson Lesson { get; set; }
         public virtual Student Student { get; set; }

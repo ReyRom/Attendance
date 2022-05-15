@@ -1,11 +1,6 @@
-﻿using AttendancePC.Models;
-using AttendancePC.Supporting;
+﻿using AttendancePC.Supporting;
 using AttendancePC.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AttendancePC.Presenters
@@ -14,6 +9,7 @@ namespace AttendancePC.Presenters
     {
         IMainView view;
 
+        #region views
         IView attendance;
         IView schedules;
         IView reports;
@@ -21,49 +17,8 @@ namespace AttendancePC.Presenters
         IView users;
         IView students;
         IView subjects;
-
-        public MainPresenter(IMainView view)
-        {
-            this.view = view;
-            Global.UserChanged += Global_UserChanged;
-        }
-
-        private void Global_UserChanged()
-        {
-            view.UserName = Global.CurrentUser?.Login ?? "";
-            view.Signed = Global.CurrentUser != null;
-            view.Attendance = view.Schedules = view.Reports = view.Settings = view.Connection = false;
-            if (Global.CurrentUser == Global.admin)
-            {
-                view.Signed = view.Connection = true;
-                return;
-            }
-            if (Global.CurrentUser?.Guest != null)
-            {
-                view.Attendance = true;
-                return;
-            }
-            if (Global.CurrentUser?.Redactor != null)
-            {
-                view.Attendance = view.Schedules = view.Reports = view.Settings = view.Signed = true;
-                return;
-            }
-        }
-
-        private void Schedules_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
-        {
-            schedules = null;
-        }
-
-        private void Attendance_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
-        {
-            attendance = null;
-        }
-
-        private void Reports_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e)
-        {
-            reports = null;
-        }
+        IView connection;
+        IView query;
 
         public IView Attendance
         {
@@ -90,7 +45,7 @@ namespace AttendancePC.Presenters
             }
         }
 
-        public IView Reports 
+        public IView Reports
         {
             set
             {
@@ -103,7 +58,7 @@ namespace AttendancePC.Presenters
             }
         }
 
-        public IView Authorization 
+        public IView Authorization
         {
             set
             {
@@ -116,8 +71,8 @@ namespace AttendancePC.Presenters
             }
         }
 
-        public IView Users 
-        { 
+        public IView Users
+        {
             set
             {
                 users = value;
@@ -129,12 +84,7 @@ namespace AttendancePC.Presenters
             }
         }
 
-        private void Users_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            users = null;
-        }
-
-        public IView Students 
+        public IView Students
         {
             set
             {
@@ -147,12 +97,7 @@ namespace AttendancePC.Presenters
             }
         }
 
-        private void Students_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            students = null;
-        }
-
-        public IView Subjects 
+        public IView Subjects
         {
             set
             {
@@ -165,6 +110,98 @@ namespace AttendancePC.Presenters
             }
         }
 
+        public IView Connection
+        {
+            set
+            {
+                connection = value;
+                connection.FormClosed += Connection_FormClosed; ;
+            }
+            get
+            {
+                return connection ?? (Connection = new ConnectionForm());
+            }
+        }
+
+        public IView Query
+        {
+            set
+            {
+                query = value;
+                query.FormClosed += Query_FormClosed; ;
+            }
+            get
+            {
+                return query ?? (Query = new QueryForm());
+            }
+        }
+        #endregion
+
+        public MainPresenter(IMainView view)
+        {
+            this.view = view;
+            Global.UserChanged += Global_UserChanged;
+        }
+
+        private void Global_UserChanged()
+        {
+            view.UserName = Global.CurrentUser?.Login ?? "";
+            view.Signed = Global.CurrentUser != null;
+            view.Attendance = view.Schedules = view.Reports = view.Settings = view.Query = view.Connection = false;
+            if (Global.CurrentUser == Global.admin)
+            {
+                view.Connection = view.Query = view.Settings = true;
+                return;
+            }
+            if (Global.CurrentUser?.Guest != null)
+            {
+                view.Attendance = true;
+                view.Reports = Global.CurrentUser.Guest.IsPrime;
+                return;
+            }
+            if (Global.CurrentUser?.Editor != null)
+            {
+                view.Attendance = view.Schedules = view.Reports = view.Settings = true;
+                return;
+            }
+        }
+
+        #region formClosed
+        private void Schedules_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            schedules = null;
+        }
+
+        private void Attendance_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            attendance = null;
+        }
+
+        private void Reports_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            reports = null;
+        }
+
+        private void Users_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            users = null;
+        }
+
+        private void Students_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            students = null;
+        }
+
+        private void Query_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            query = null;
+        }
+
+        private void Connection_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            connection = null;
+        }
+
         private void Subjects_FormClosed(object sender, FormClosedEventArgs e)
         {
             subjects = null;
@@ -174,12 +211,14 @@ namespace AttendancePC.Presenters
         {
             authorization = null;
         }
+        #endregion
 
-        internal void LoadMain()
+        public void LoadMain()
         {
-            view.Attendance = view.Schedules = view.Reports = view.Settings = view.Connection = view.Signed = false;
+            Core.RenewConnectionString();
+            view.Attendance = view.Schedules = view.Reports = view.Settings = view.Query = view.Connection = view.Signed = false;
         }
-        internal void SignOut()
+        public void SignOut()
         {
             Global.CurrentUser = null;
             attendance?.Close();
@@ -188,6 +227,28 @@ namespace AttendancePC.Presenters
             users?.Close();
             students?.Close();
             subjects?.Close();
+            connection?.Close();
+        }
+
+        public void SetStyle(Control control)
+        {
+            if (control is Form form)
+            {
+                form.BackColor = Color.AliceBlue;
+            }
+            else if (control is MdiClient mdi)
+            {
+                mdi.BackColor = Color.AliceBlue;
+            }
+            else if(control is DataGridView dgv)
+            {
+                dgv.BackgroundColor = Color.White;
+            }
+
+            foreach (Control item in control.Controls)
+            {
+                SetStyle(item);
+            }
         }
     }
 }

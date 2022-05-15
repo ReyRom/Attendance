@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace AttendancePC.Views
 {
@@ -15,6 +16,14 @@ namespace AttendancePC.Views
         object SummarySubjects
         {
             set;
+        }
+        object[] DiagramSource
+        {
+            set;
+        }
+        Chart Diagram
+        {
+            get;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace AttendancePC.Models
 {
     public interface IAttendanceModel
     {
-        DataTable LoadAttends(DateTime date, Student filter);
+        DataTable LoadAttends(DateTime date, Student filter, int order);
         List<string> GetDayPairs(DateTime date);
         void SetAttendChar(AttendRepresentation item);
         void SetReasonable(AttendRepresentation item);

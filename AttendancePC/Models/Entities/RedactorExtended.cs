@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AttendancePC.Models.Entities
 {
-    public partial class Redactor
+    public partial class Editor
     {
         public string Login { get => this.User.Login; }
     }

@@ -11,24 +11,31 @@ namespace AttendancePC.Models
     {
         public void CheckUser(string login, string password)
         {
-            if (Global.adminLogin == login && Global.adminPassword == password)
+            try
             {
-                Global.CurrentUser = Global.admin;
-                return;
-            }
-            var user = Core.Context.Users.FirstOrDefault(u => u.Login == login);
-            if (user == null)
-            {
-                throw new Exception();
-            }
-            if (user.Redactor != null)
-            {
-                if (user.Redactor.Password != password)
+                if (Global.adminLogin == login && Global.adminPassword == password)
                 {
-                    throw new Exception();
+                    Global.CurrentUser = Global.admin;
+                    return;
                 }
+                var user = Core.Context.Users.FirstOrDefault(u => u.Login == login);
+                if (user == null)
+                {
+                    throw new Exception("Введены некорректные учетные данные");
+                }
+                if (user.Editor != null)
+                {
+                    if (user.Editor.Password != password)
+                    {
+                        throw new Exception("Указан неверный пароль");
+                    }
+                }
+                Global.CurrentUser = user;
             }
-            Global.CurrentUser = user;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

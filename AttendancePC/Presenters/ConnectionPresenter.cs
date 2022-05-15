@@ -18,11 +18,16 @@ namespace AttendancePC.Presenters
 
         public void SaveConnection()
         {
+            if (!UserFeedback.QuestionMessage("Вы уверены, что хотите сохранить строку подключения?"))
+            {
+                return;
+            }
             Core.Server = view.Server;
             Core.Database = view.DataBase;
             Core.Login = view.Login;
             Core.Password = view.Password;
             Core.RenewConnectionString();
+            UserFeedback.InformationMessage("Данные подключения сохранены");
         }
 
         public void LoadConnectionInfo() 

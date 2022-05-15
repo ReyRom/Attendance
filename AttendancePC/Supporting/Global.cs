@@ -11,13 +11,11 @@ namespace AttendancePC.Supporting
 {
     public static class Global
     {
-        public delegate void EventHandler();
-        public static event EventHandler DataChanged;
-        private static User currentUser;
-        public static event EventHandler UserChanged;
+        #region Observer
+        public delegate void ObserverEventHandler();
+        public static event ObserverEventHandler DataChanged;
 
         private static DateTime currentDate = DateTime.Now.Date;
-
         public static DateTime CurrentDate
         {
             get => currentDate;
@@ -27,8 +25,6 @@ namespace AttendancePC.Supporting
                 DataChanged?.Invoke();
             }
         }
-
-        public static readonly Subject nullSubject = new Subject() { IdSubject = 0, Name = "" };
 
         public static void InitializePresenter(IPresenter presenter)
         {
@@ -40,6 +36,13 @@ namespace AttendancePC.Supporting
             DataChanged?.Invoke();
         }
 
+        #endregion
+
+        public static readonly Subject nullSubject = new Subject() { IdSubject = 0, Name = "" };
+
+        #region User
+
+        private static User currentUser;
         public static User CurrentUser
         {
             get
@@ -56,5 +59,9 @@ namespace AttendancePC.Supporting
         public static User admin = new User() { IdUser = 0, Login = "admin" };
         public static string adminLogin = "admin";
         public static string adminPassword = "admin";
+
+        public static event ObserverEventHandler UserChanged;
+
+        #endregion
     }
 }

@@ -16,12 +16,16 @@ namespace AttendancePC.Presenters
     {
         private readonly IAttendanceView view;
         private readonly IAttendanceModel model;
-        
+
         public AttendancePresenter(IAttendanceView view)
         {
             this.view = view;
             model = new AttendanceModel();
             Global.DataChanged += Global_DataChanged;
+        }
+        private void Global_DataChanged()
+        {
+            LoadAttends(Global.CurrentDate);
         }
 
         public void SetCurrentDate(DateTime date)
@@ -48,31 +52,19 @@ namespace AttendancePC.Presenters
                 }
             }
         }
-        
-        private void Global_DataChanged()
-        {
-            try
-            {
-                LoadAttends(Global.CurrentDate);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
         public void LoadAttends(DateTime date)
         {
             try
             {
-                view.Data = model.LoadAttends(date, view.Filter as Student);
+                view.Data = model.LoadAttends(date, view.Filter as Student, (int)view.Order);
                 view.Headers = model.GetDayPairs(date).ToArray();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UserFeedback.ErrorMessage(ex);
             }
-            
+
         }
 
         public void LoadStudents()
@@ -80,10 +72,11 @@ namespace AttendancePC.Presenters
             try
             {
                 view.Students = model.LoadStudents();
+                view.Order = new List<string> { "Без сортировки", "По возрастанию", "По убыванию" };
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UserFeedback.ErrorMessage(ex);
             }
         }
 
@@ -111,7 +104,7 @@ namespace AttendancePC.Presenters
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UserFeedback.ErrorMessage(ex);
             }
         }
         public void SetReasonable(AttendRepresentation item)
@@ -123,9 +116,8 @@ namespace AttendancePC.Presenters
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UserFeedback.ErrorMessage(ex);
             }
-            
         }
     }
 }

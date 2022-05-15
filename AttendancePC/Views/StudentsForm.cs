@@ -14,6 +14,8 @@ namespace AttendancePC.Views
     public partial class StudentsForm : Form, IStudentsView
     {
         StudentsPresenter presenter;
+
+        #region Controls
         public object Students
         {
             set 
@@ -29,6 +31,7 @@ namespace AttendancePC.Views
                 DismissedListBox.DataSource = value;
             }
         }
+        #endregion
 
         public StudentsForm()
         {

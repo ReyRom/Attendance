@@ -50,7 +50,6 @@ namespace AttendancePC.Models
                         Attends.Add(new AttendRepresentation
                         {
                             AttendChar = attend.AttendChar,
-                            Comment = attend.Comment,
                             IdLesson = attend.IdLesson,
                             IdStudent = attend.IdStudent,
                             IsReasonable = attend.IsReasonable
@@ -61,7 +60,6 @@ namespace AttendancePC.Models
                         Attends.Add(new AttendRepresentation
                         {
                             AttendChar = "+",
-                            Comment = "",
                             IdLesson = Lessons.Where(l => l.OrderNumber == i).First().IdLesson,
                             IdStudent = Student.IdStudent,
                             IsReasonable = null

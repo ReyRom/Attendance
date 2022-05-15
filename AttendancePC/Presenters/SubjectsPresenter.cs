@@ -1,10 +1,7 @@
 ﻿using AttendancePC.Models;
+using AttendancePC.Supporting;
 using AttendancePC.Views;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AttendancePC.Presenters
 {
@@ -21,36 +18,71 @@ namespace AttendancePC.Presenters
 
         public void LoadData()
         {
-            view.Subjects = model.GetSubjects();
-            view.NonActual = model.GetNonActualSubjects();
+            try
+            {
+                view.Subjects = model.GetSubjects();
+                view.NonActual = model.GetNonActualSubjects();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         public void AddSubject(string name)
         {
-            if (String.IsNullOrWhiteSpace(name)) return;
-            model.AddSubject(name);
-            LoadData();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(name)) return;
+                model.AddSubject(name);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         public void DeactualizeSubject(object item)
         {
-            if (item == null) return;
-            model.DeleteSubject(item);
-            LoadData();
+            try
+            {
+                if (item == null) return;
+                model.DeleteSubject(item);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         public void DeleteSubject(object item)
         {
-            if (item == null) return;
-            model.DeleteSubject(item);
-            LoadData();
+            try
+            {
+                if (item == null) return;
+                model.DeleteSubject(item);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         internal void RecoverSubject(object item)
         {
-            if (item == null) return;
-            model.RecoverSubject(item);
-            LoadData();
+            try
+            {
+                if (item == null) return;
+                model.RecoverSubject(item);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
     }
 }

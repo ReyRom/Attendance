@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AttendanceForm));
             this.PreviousDayButton = new System.Windows.Forms.Button();
@@ -45,6 +46,7 @@
             this.AttendanceToolStrip = new System.Windows.Forms.ToolStrip();
             this.EditToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.StudentToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
+            this.OrderToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.AttendanceDataGridView)).BeginInit();
             this.AttendanceToolStrip.SuspendLayout();
             this.SuspendLayout();
@@ -52,7 +54,7 @@
             // PreviousDayButton
             // 
             this.PreviousDayButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PreviousDayButton.Location = new System.Drawing.Point(108, 27);
+            this.PreviousDayButton.Location = new System.Drawing.Point(90, 40);
             this.PreviousDayButton.MinimumSize = new System.Drawing.Size(35, 25);
             this.PreviousDayButton.Name = "PreviousDayButton";
             this.PreviousDayButton.Size = new System.Drawing.Size(35, 25);
@@ -64,10 +66,11 @@
             // LessonsDateTimePicker
             // 
             this.LessonsDateTimePicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LessonsDateTimePicker.Location = new System.Drawing.Point(149, 27);
+            this.LessonsDateTimePicker.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.LessonsDateTimePicker.Location = new System.Drawing.Point(131, 40);
             this.LessonsDateTimePicker.MinimumSize = new System.Drawing.Size(120, 25);
             this.LessonsDateTimePicker.Name = "LessonsDateTimePicker";
-            this.LessonsDateTimePicker.Size = new System.Drawing.Size(120, 25);
+            this.LessonsDateTimePicker.Size = new System.Drawing.Size(171, 26);
             this.LessonsDateTimePicker.TabIndex = 2;
             this.LessonsDateTimePicker.ValueChanged += new System.EventHandler(this.LessonsDateTimePicker_ValueChanged);
             // 
@@ -99,15 +102,15 @@
             this.Pair4Column,
             this.Pair5Column,
             this.Pair6Column});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Info;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.AttendanceDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
-            this.AttendanceDataGridView.Location = new System.Drawing.Point(12, 58);
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Info;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.AttendanceDataGridView.DefaultCellStyle = dataGridViewCellStyle3;
+            this.AttendanceDataGridView.Location = new System.Drawing.Point(12, 71);
             this.AttendanceDataGridView.MultiSelect = false;
             this.AttendanceDataGridView.Name = "AttendanceDataGridView";
             this.AttendanceDataGridView.ReadOnly = true;
@@ -115,13 +118,15 @@
             this.AttendanceDataGridView.RowTemplate.Height = 25;
             this.AttendanceDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.AttendanceDataGridView.ShowCellToolTips = false;
-            this.AttendanceDataGridView.Size = new System.Drawing.Size(408, 705);
+            this.AttendanceDataGridView.Size = new System.Drawing.Size(408, 712);
             this.AttendanceDataGridView.TabIndex = 4;
             this.AttendanceDataGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.AttendanceDataGridView_CellMouseClick);
             // 
             // StudentColumn
             // 
             this.StudentColumn.DataPropertyName = "Name";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.StudentColumn.DefaultCellStyle = dataGridViewCellStyle2;
             this.StudentColumn.FillWeight = 90F;
             this.StudentColumn.HeaderText = "ФИО";
             this.StudentColumn.Name = "StudentColumn";
@@ -184,7 +189,7 @@
             // NextDayButton
             // 
             this.NextDayButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NextDayButton.Location = new System.Drawing.Point(275, 27);
+            this.NextDayButton.Location = new System.Drawing.Point(308, 40);
             this.NextDayButton.MinimumSize = new System.Drawing.Size(35, 25);
             this.NextDayButton.Name = "NextDayButton";
             this.NextDayButton.Size = new System.Drawing.Size(35, 25);
@@ -195,12 +200,14 @@
             // 
             // AttendanceToolStrip
             // 
+            this.AttendanceToolStrip.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.AttendanceToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.EditToolStripButton,
-            this.StudentToolStripComboBox});
+            this.StudentToolStripComboBox,
+            this.OrderToolStripComboBox});
             this.AttendanceToolStrip.Location = new System.Drawing.Point(0, 0);
             this.AttendanceToolStrip.Name = "AttendanceToolStrip";
-            this.AttendanceToolStrip.Size = new System.Drawing.Size(432, 25);
+            this.AttendanceToolStrip.Size = new System.Drawing.Size(432, 28);
             this.AttendanceToolStrip.TabIndex = 0;
             this.AttendanceToolStrip.Text = "toolStrip1";
             // 
@@ -211,27 +218,37 @@
             this.EditToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("EditToolStripButton.Image")));
             this.EditToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.EditToolStripButton.Name = "EditToolStripButton";
-            this.EditToolStripButton.Size = new System.Drawing.Size(62, 22);
-            this.EditToolStripButton.Text = "EditMode";
+            this.EditToolStripButton.Size = new System.Drawing.Size(121, 25);
+            this.EditToolStripButton.Text = "Редактировать";
             // 
             // StudentToolStripComboBox
             // 
             this.StudentToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.StudentToolStripComboBox.Name = "StudentToolStripComboBox";
-            this.StudentToolStripComboBox.Size = new System.Drawing.Size(121, 25);
+            this.StudentToolStripComboBox.Size = new System.Drawing.Size(121, 28);
+            this.StudentToolStripComboBox.ToolTipText = "Фильтрация";
             this.StudentToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.StudentToolStripComboBox_SelectedIndexChanged);
+            // 
+            // OrderToolStripComboBox
+            // 
+            this.OrderToolStripComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.OrderToolStripComboBox.Name = "OrderToolStripComboBox";
+            this.OrderToolStripComboBox.Size = new System.Drawing.Size(121, 28);
+            this.OrderToolStripComboBox.ToolTipText = "Сортировка";
+            this.OrderToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.OrderToolStripComboBox_SelectedIndexChanged);
             // 
             // AttendanceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(432, 775);
+            this.ClientSize = new System.Drawing.Size(432, 795);
             this.Controls.Add(this.AttendanceToolStrip);
             this.Controls.Add(this.PreviousDayButton);
             this.Controls.Add(this.LessonsDateTimePicker);
             this.Controls.Add(this.AttendanceDataGridView);
             this.Controls.Add(this.NextDayButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.MinimumSize = new System.Drawing.Size(448, 834);
             this.Name = "AttendanceForm";
             this.Text = "Посещаемость";
             this.Load += new System.EventHandler(this.AttendanceForm_Load);
@@ -248,6 +265,10 @@
         private System.Windows.Forms.DateTimePicker LessonsDateTimePicker;
         private System.Windows.Forms.DataGridView AttendanceDataGridView;
         private System.Windows.Forms.Button NextDayButton;
+        private System.Windows.Forms.ToolStrip AttendanceToolStrip;
+        private System.Windows.Forms.ToolStripButton EditToolStripButton;
+        private System.Windows.Forms.ToolStripComboBox StudentToolStripComboBox;
+        private System.Windows.Forms.ToolStripComboBox OrderToolStripComboBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn StudentColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Pair1Column;
         private System.Windows.Forms.DataGridViewTextBoxColumn Pair2Column;
@@ -255,9 +276,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Pair4Column;
         private System.Windows.Forms.DataGridViewTextBoxColumn Pair5Column;
         private System.Windows.Forms.DataGridViewTextBoxColumn Pair6Column;
-        private System.Windows.Forms.ToolStrip AttendanceToolStrip;
-        private System.Windows.Forms.ToolStripButton EditToolStripButton;
-        private System.Windows.Forms.ToolStripComboBox StudentToolStripComboBox;
     }
 }
 

@@ -146,9 +146,10 @@
             this.Controls.Add(this.DataBaseTextBox);
             this.Controls.Add(this.ServerTextBox);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "ConnectionForm";
-            this.Text = "ConnectionForm";
+            this.Text = "Настройки подключения";
             this.Load += new System.EventHandler(this.ConnectionForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

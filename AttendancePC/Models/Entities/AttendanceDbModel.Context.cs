@@ -28,16 +28,16 @@ namespace AttendancePC.Models.Entities
         }
     
         public virtual DbSet<Day> Days { get; set; }
-        public virtual DbSet<LessonAttend> LessonAttends { get; set; }
         public virtual DbSet<Lesson> Lessons { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Guest> Guests { get; set; }
-        public virtual DbSet<Redactor> Redactors { get; set; }
+        public virtual DbSet<LessonAttend> LessonAttends { get; set; }
         public virtual DbSet<AttendanceSumView> AttendanceSumViews { get; set; }
+        public virtual DbSet<Editor> Editors { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     
         public virtual int SP_Dynamic_Pivot(string tableSRC, string columnName, string field, string fieldRows, string functionType, string condition, string outputTable)
         {

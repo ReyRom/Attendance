@@ -1,4 +1,5 @@
-﻿using AttendancePC.Views;
+﻿using AttendancePC.Supporting;
+using AttendancePC.Views;
 using System;
 
 namespace AttendancePC.Presenters
@@ -16,32 +17,67 @@ namespace AttendancePC.Presenters
 
         internal void DeleteGuest(object item)
         {
-            model.DeleteGuest(item);
-            LoadData();
+            try
+            {
+                model.DeleteGuest(item);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         internal void DeleteRedactor(object item)
         {
-            model.DeleteRedactor(item);
-            LoadData();
+            try
+            {
+                model.DeleteRedactor(item);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         internal void AddGuest(string login, bool isPrime)
         {
-            model.AddGuest(login, isPrime);
-            LoadData();
+            try
+            {
+                model.AddGuest(login, isPrime);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         internal void AddRedactor(string login, string password)
         {
-            model.AddRedactor(login, password);
-            LoadData();
+            try
+            {
+                model.AddRedactor(login, password);
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
 
         internal void LoadData()
         {
-            view.Guests = model.GetGuests();
-            view.Redactors = model.GetRedactors();
+            try
+            {
+                view.Guests = model.GetGuests();
+                view.Redactors = model.GetRedactors();
+            }
+            catch (Exception ex)
+            {
+                UserFeedback.ErrorMessage(ex);
+            }
         }
     }
 }

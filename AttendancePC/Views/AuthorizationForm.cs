@@ -15,6 +15,7 @@ namespace AttendancePC.Views
     {
         AuthorizationPresenter presenter;
 
+        #region Controls
         public string Login
         {
             get 
@@ -29,6 +30,7 @@ namespace AttendancePC.Views
                 return PasswordTextBox.Text;
             }
         }
+        #endregion
 
         public AuthorizationForm()
         {

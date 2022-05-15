@@ -14,6 +14,8 @@ namespace AttendancePC.Views
     public partial class ConnectionForm : Form, IConnectionView
     {
         ConnectionPresenter presenter;
+
+        #region Controls
         public string Server
         {
             get => ServerTextBox.Text;
@@ -34,6 +36,7 @@ namespace AttendancePC.Views
             get => PasswordTextBox.Text;
             set => PasswordTextBox.Text = value;
         }
+        #endregion
 
         public ConnectionForm()
         {

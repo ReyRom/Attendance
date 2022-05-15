@@ -14,6 +14,8 @@ namespace AttendancePC.Views
     public partial class SubjectsForm : Form, ISubjectsView
     {
         SubjectsPresenter presenter;
+
+        #region Controls
         public object Subjects
         {
             set
@@ -29,6 +31,7 @@ namespace AttendancePC.Views
                 NonActualListBox.DataSource = value;
             }
         }
+        #endregion
 
         public SubjectsForm()
         {

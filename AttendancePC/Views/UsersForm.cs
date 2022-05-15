@@ -15,6 +15,7 @@ namespace AttendancePC.Views
     {
         UsersPresenter presenter;
 
+        #region Controls
         public object Guests
         {
             set 
@@ -29,6 +30,7 @@ namespace AttendancePC.Views
                 RedactorsListBox.DataSource = value;
             }
         }
+        #endregion
 
         public UsersForm()
         {
